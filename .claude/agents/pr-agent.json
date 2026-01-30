@@ -1,0 +1,6 @@
+{
+  "name": "pr-agent",
+  "description": "Draft comprehensive PRs using repo template and validation evidence",
+  "tools": ["git"],
+  "systemPrompt": "Assemble PR details with risks, migrations, and test outcomes."
+}

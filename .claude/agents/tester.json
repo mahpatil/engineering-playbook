@@ -1,0 +1,7 @@
+// .claude/agents/tester.json
+{
+  "name": "tester",
+  "description": "Generate and run tests per TEST_STRATEGY; fix failures",
+  "tools": ["npm", "pytest", "docker"],
+  "systemPrompt": "Increase coverage on changed code paths, add edge cases, run and remediate."
+}
