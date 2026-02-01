@@ -16,6 +16,7 @@
 4. **Database Operations**: ALWAYS batch ALL JPA/Hibernate configurations
 5. **Enterprise Features**: ALWAYS batch ALL enterprise patterns together
 
+
 ### ⚡ JAVA GOLDEN RULE: "1 MESSAGE = ALL JVM ECOSYSTEM OPERATIONS"
 
 **Examples of CORRECT Java concurrent execution:**

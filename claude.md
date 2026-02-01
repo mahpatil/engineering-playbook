@@ -936,7 +936,156 @@ public class AsyncConfig {
 
 ## Additional Resources
 
+
 ### Dependencies (build.gradle)
+```gradle
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'jacoco'
+    id 'org.owasp.dependencycheck' version '9.0.0'
+    id 'org.sonarqube' version '4.4.1.3373'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '25'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('testcontainersVersion', "1.19.3")
+    set('resilience4jVersion', "2.2.0")
+    set('opentelemetryVersion', "1.34.1")
+}
+
+dependencies {
+    // Spring Boot
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // OpenTelemetry
+    implementation platform("io.opentelemetry:opentelemetry-bom:${opentelemetryVersion}")
+    implementation 'io.opentelemetry:opentelemetry-api'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+
+    // Resilience4j
+    implementation platform("io.github.resilience4j:resilience4j-bom:${resilience4jVersion}")
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3'
+    implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
+    implementation 'io.github.resilience4j:resilience4j-retry'
+    implementation 'io.github.resilience4j:resilience4j-bulkhead'
+    implementation 'io.github.resilience4j:resilience4j-timelimiter'
+
+    // Caching
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'io.lettuce:lettuce-core'
+
+    // Database
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+
+    // Observability
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
+    // Lombok (optional, for cleaner code)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation platform("org.testcontainers:testcontainers-bom:${testcontainersVersion}")
+    testImplementation 'org.testcontainers:testcontainers'
+    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'io.rest-assured:rest-assured'
+    testImplementation 'org.awaitility:awaitility'
+}
+
+// Test configuration
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+// Integration test configuration
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.output
+            srcDir file('src/integration-test/java')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+task integrationTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+    useJUnitPlatform()
+}
+
+// Jacoco configuration
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+// OWASP Dependency Check
+dependencyCheck {
+    failBuildOnCVSS = 7
+    suppressionFile = 'dependency-check-suppressions.xml'
+}
+
+// SonarQube
+sonar {
+    properties {
+        property "sonar.projectKey", "order-service"
+        property "sonar.projectName", "Order Service"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}
+```
+
+
+
+### Dependencies (build.gradle) 2 CHECK
 ```gradle
 plugins {
     id 'java'

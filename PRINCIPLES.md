@@ -47,3 +47,18 @@ Title: Engineering Principles
 - Cost Optimization: Right-size resources, monitor cloud spending, use auto-scaling and spot instances to minimize waste.
 - Team Autonomy: Organize teams around business domains; enable independent service ownership and deployment (Conway's Law).
 - Graceful Degradation: Services fail safely with reduced functionality; prioritize critical paths to prevent cascade failures.
+
+using open standards
+libraires with 0 critical and high vulnerabilities\
+gradle for build
+5. Security Considerations
+
+OAuth2/JWT resource server configuration
+OWASP dependency check in CI/CD
+Non-root Docker user
+CSP headers configured
+6. Kubernetes-Native
+
+Health probes (liveness/readiness) configured
+HPA with CPU/memory scaling
+Resource requests/limits defined
