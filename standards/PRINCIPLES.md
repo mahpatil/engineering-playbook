@@ -9,7 +9,7 @@ Foundational principles that guide all architectural and implementation decision
 ### 1. Composable Architecture & Domain-Driven Design
 Focus on separation of concerns, bounded contexts, and ubiquitous language for maintainability. Design systems as composable modules that can be independently developed, deployed, and scaled.
 
-### 2. API-First & Contract-Driven (MACH)
+### 2. Microservices, API-First & Contract-Driven, Cloud-native (MACH)
 Design independent services with clear contracts, RESTful APIs, cloud-native principles, container-first deployment, and eventual consistency for system flexibility. Microservices, API-first, Cloud-native, and Headless architecture.
 
 ### 3. Cloud Portability
@@ -39,12 +39,15 @@ Integrate CI/CD, automated testing, and security scanning into every stage from 
 ### 11. Infrastructure as Code
 Treat all infrastructure, configuration, and deployments as version-controlled, repeatable code artifacts. Everything is auditable and reproducible.
 
+### 12. Open source and open standards
+Rely on open source and open standards such as OAUTH, Open Telemetry, Java, Spring, Kubernetes over proprietary standards, protocols, libraries.
 ---
 
 ## Engineering Tenets
 
 ### Clarity Over Cleverness
 - Optimize for readability and explicitness
+- Align to business and domain terminology
 - Code is read more than written
 - Prefer boring, predictable solutions
 
@@ -62,7 +65,7 @@ Treat all infrastructure, configuration, and deployments as version-controlled, 
 - Validate inputs at system edges
 - Trust internal invariants after validation
 - Fail fast on invalid state
-
+    
 ---
 
 ## Tradeoffs & Decision Framework
@@ -82,10 +85,16 @@ Abstract only repeated patterns (Rule of Three). Avoid premature indirection. Th
 
 | Principle | Implementation |
 |-----------|----------------|
+| Secure coding | Follow secure coding standards and prioritise OWASP Top 10 in development life cycle |
+| Authentication everywhere | Authenticate all flows internal and external |
 | Least Privilege | Minimize permissions and accessible data at every level |
 | Input Validation | Sanitize at boundaries; reject malformed or unexpected inputs |
 | Secrets Management | Never hardcode; use vaults/env; rotate keys automatically |
-| PII Handling | Mask at rest and in logs; adhere to data minimization |
+| PII & Confidential Data Handling | Mask at rest and in logs; adhere to data minimization |
+| Encryption all flows | Encrypt all data in transit and use mTLS |
+| Vulnerabilities & misconfig |  |
+| Audit trails | Generate security audit trails for critical operations |
+| Protective monitoring | Setup monitoring and alerting for security events |
 
 ---
 
@@ -97,6 +106,7 @@ Abstract only repeated patterns (Rule of Three). Avoid premature indirection. Th
 | Timeouts & Retries | Bounded retries with exponential backoff; circuit breakers for unstable dependencies |
 | Fail Fast | Detect and surface errors early; avoid silent failures |
 | Graceful Degradation | Reduced functionality over total outage |
+| Backup & Restore | Automated backups, restoration process |
 
 ---
 

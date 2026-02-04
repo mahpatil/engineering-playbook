@@ -4,6 +4,24 @@ Standards for technology selection and implementation.
 
 ---
 
+### Technology Stack
+- **API Gateway**: Native API Gateway for rate limiting at the edge, request routing, or API composition patterns
+- **Backend**: Latest Java LTS (25+), Spring Boot 4.0+, Gradle (multi-module monorepo)
+- **Frontend**: React with TypeScript, Vite
+- **Spring Cloud**: Microservices patterns and distributed system support
+- **Containers**: Docker for all services
+- **Orchestration**: Kubernetes (Kind locally, Cloud Run on GCP)
+- **Infrastructure**: Terraform for IaC to setup core GCP resources
+- **Database**: CloudSQL (GCP), local SQL/H2 for development
+- **Caching**: Redis, cloud native
+- **Secrets**: GCP Secrets manager for runtime, GitHub secrets for build
+- **Events/Integration**: GCP Pub/Sub, Kafka
+- **Config**: YAML for all Kubernetes and application configs
+- **OpenTelemetry**: Unified observability (traces, metrics, logs)
+- **React 19+**: Latest react library for web and native use interfaces.
+
+---
+
 ## Backend: Java/Spring
 
 ### Version Requirements

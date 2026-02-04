@@ -4,6 +4,24 @@ Standards for CI/CD, deployment, and developer experience.
 
 ---
 
+## Tools
+
+| Tools | Capabilities | Details |
+|---------|----------|----------|
+| GitHub  | Source Control, Secrets   | All code to be maintained in GitHub   |
+| GitHub Actions  | Build and Deploy pipelines   | All build and deployment via GitHub Actions   |
+| Code quality and security  | Sonar Scanner  | Static Code Aanalysis   |
+| Build scripting| Gradle, npm | Gradle for all java build scripting, npm for front-end node |
+| Secret Management  | GitHub Secrets & GCP   | Secrets for build and deploy in GitHub and GCP for runtime secrets   |
+| Infrastructure as Code | Terraform | All infrastructure provisioning to be done via Terraform  |
+| IDE | VS Code   | Engineers to use VSCode as IDE  |
+| Artifact management | GCP Artifact Registry   | All generated artifadcts  |
+| Unit testing | Junit (Java), Jest(JS)   | Junit for java tests, Jest for javascript  |
+| Contract testing | PACT   | contract-based testing for Consumer-Driven tests |
+| Integration testing | Cucumber, Testcontainers  | BDD Style tests for integration tests  and test containers to manage services|
+| Performance testing | Grafana K6    |  Use K6 for load and performance testing of critical flows  |
+
+
 ## Branching Strategy
 
 ### Trunk-Based Development
