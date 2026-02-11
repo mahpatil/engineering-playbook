@@ -11,6 +11,11 @@ Quick reference for core engineering principles. For detailed standards, see [st
 - **Separation of concerns**: Isolate domains, interfaces, and implementations
 - **Defensive boundaries**: Validate inputs at edges; trust internal invariants
 - **Observability-first**: Logs, metrics, traces are first-class citizens
+- **Consistency across teams**: Shared practices, vocabulary, and decision-making
+- **Data-driven decisions**: Objective criteria, ADRs, and metrics over opinions
+- **Quality & security are everyone's responsibility**: Shift-left; built in, not bolted on
+- **Living documentation**: Auto-generated from code; manually document only ADRs and context
+- **Continuous learning**: Retrospectives, post-mortems, evolving standards
 
 ---
 
@@ -27,6 +32,8 @@ Quick reference for core engineering principles. For detailed standards, see [st
 9. **Cost Optimization** - Right-sizing, auto-scaling, FinOps
 10. **Automation First** - CI/CD, automated testing, security scanning
 11. **Infrastructure as Code** - Version-controlled, repeatable deployments
+12. **AI-First Design** - Inference endpoints, feature stores, feedback loops from inception
+13. **Open Source & Open Standards** - Prefer OAUTH, OpenTelemetry, Kubernetes over proprietary
 
 ---
 
@@ -46,6 +53,8 @@ Quick reference for core engineering principles. For detailed standards, see [st
 - Libraries with zero critical/high vulnerabilities
 - Active maintenance and community support
 - Clear licensing compatible with commercial use
+- Performance characteristics matching requirements
+- AI/ML frameworks with production-ready serving capabilities
 
 ---
 
@@ -53,11 +62,11 @@ Quick reference for core engineering principles. For detailed standards, see [st
 
 | Document | Content |
 |----------|---------|
-| [PRINCIPLES.md](./standards/PRINCIPLES.md) | Full principles with rationale |
-| [ARCHITECTURE-PATTERNS.md](./standards/ARCHITECTURE-PATTERNS.md) | DDD, Hexagonal, CQRS, Event-Driven |
-| [PLATFORM-STANDARDS.md](./standards/PLATFORM-STANDARDS.md) | K8s, Service Mesh, GitOps, DR |
-| [TECHNOLOGY-STANDARDS.md](./standards/TECHNOLOGY-STANDARDS.md) | Java/Spring, React/TypeScript |
-| [SECURITY-STANDARDS.md](./standards/SECURITY-STANDARDS.md) | Zero-trust, secrets, compliance |
-| [DEVOPS-STANDARDS.md](./standards/DEVOPS-STANDARDS.md) | CI/CD, deployment strategies |
-| [OBSERVABILITY-STANDARDS.md](./standards/OBSERVABILITY-STANDARDS.md) | Metrics, tracing, logging |
-| [CHECKLISTS.md](./standards/CHECKLISTS.md) | Implementation checklists |
+| [principles.md](./standards/overall/principles.md) | Full principles with rationale |
+| [patterns.md](./standards/overall/patterns.md) | Architecture patterns |
+| [tech-stack.md](./standards/overall/tech-stack.md) | Technology stack standards |
+| [devops.md](./standards/overall/devops.md) | CI/CD and DevOps |
+| [metrics.md](./standards/overall/metrics.md) | Observability and metrics |
+| [checklists.md](./standards/overall/checklists.md) | Implementation checklists |
+| [decision-framework.md](./standards/overall/decision-framework.md) | Decision framework |
+| [glossary.md](./standards/overall/glossary.md) | Glossary of terms |
