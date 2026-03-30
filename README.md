@@ -43,8 +43,8 @@ cat README.md
 | [Overall north star](./standards/overall/) | 🚧 Beta | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
 | [Claude Templates](./templates/) | 🚧 Beta | Claude Code | [View](./templates/README.md) |
 | [(dot)Claude Settings](./.claude) | 🚧 Beta | Claude Code | [View](./.claude/README.md) |
-| Microservices | 📋 Planned | Platform Agnostic | Coming soon |
-| API Design | 📋 Planned | Platform Agnostic | Coming soon |
+| Microservices | 📋 Planned | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
+| API Design | 📋 Planned | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
 | Data Architecture | 📋 Planned | AWS, Azure | Coming soon |
 | Event-Driven Architecture - EDA | 📋 Planned | AWS, Azure, GCP | Coming soon |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
