@@ -19,7 +19,7 @@ This file defines cross-cutting engineering principles that apply to every servi
 ### Naming
 
 - Names must be descriptive and intention-revealing. `getUserById` not `getUser`, `processPaymentRefund` not `process`.
-- Avoid abbreviations unless universally understood in the domain (`id`, `url`, `api`, `dto` are fine; `mgr`, `hlpr`, `proc` are not).
+- Avoid abbreviations unless universally understood in the domain (`id`, `url`, `api`, `dto` are fine; `mgr`, `hlpr`, `proc` are not) or subject to length restructions (say resource names).
 - Boolean variables and methods must read as assertions: `isActive`, `hasPermission`, `canRetry`.
 - Constants are `SCREAMING_SNAKE_CASE`. Classes are `PascalCase`. Methods and variables are `camelCase` (Java/.NET) or `snake_case` (Python/Go).
 - File names match the primary class or module they contain.
@@ -31,15 +31,6 @@ This file defines cross-cutting engineering principles that apply to every servi
 - Maximum method length: **40 lines** (excluding blank lines and comments). If a method is longer, it is doing too much.
 - No magic numbers or strings. Extract to named constants with a comment explaining the value's origin.
 
-```java
-// BAD
-if (retries > 3) { ... }
-
-// GOOD
-private static final int MAX_RETRY_ATTEMPTS = 3; // aligned with SLA for transient failures
-if (retries > MAX_RETRY_ATTEMPTS) { ... }
-```
-
 ### SOLID Principles
 
 - **Single Responsibility**: One reason to change per class.
@@ -48,7 +39,7 @@ if (retries > MAX_RETRY_ATTEMPTS) { ... }
 - **Interface Segregation**: Prefer narrow, focused interfaces over broad ones.
 - **Dependency Inversion**: Depend on abstractions. Inject dependencies; do not instantiate them.
 
-**Do not use service locators or static factories for dependency resolution.** Constructor injection is the only acceptable DI pattern.
+**Do not use service locators or static factories for dependency resolution.** Constructor injection is the only acceptable Dependency injection pattern.
 
 ---
 
@@ -139,16 +130,6 @@ Domain code must never import from `infrastructure` or `api` packages. Applicati
 - **Expose errors appropriately.** Internal error details (stack traces, SQL errors) must never reach API responses in production.
 
 ```java
-// BAD — swallowed exception
-try {
-    process();
-} catch (Exception e) {
-    // ignore
-}
-
-// BAD — implementation details leaked
-return ResponseEntity.status(500).body(e.getMessage());
-
 // GOOD — structured error with no internal detail
 return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
     "An unexpected error occurred. Reference: " + correlationId);
@@ -183,20 +164,6 @@ Every service **must** be observable from day one. Observability is not a featur
 - Use JSON structured logging. No unstructured `System.out.println` or `console.log` in production code.
 - Every log line includes: `timestamp`, `level`, `service`, `traceId`, `spanId`, `correlationId`, `message`.
 - Log **events** (what happened), not **states** (what is). Log at the boundary, not inside domain logic.
-
-```json
-{
-  "timestamp": "2025-03-31T12:00:00Z",
-  "level": "INFO",
-  "service": "order-service",
-  "traceId": "abc123",
-  "correlationId": "req-xyz",
-  "event": "order.created",
-  "orderId": "ord-456",
-  "customerId": "cust-789",
-  "amount": 149.99
-}
-```
 
 **Never log PII** (names, emails, card numbers, SSNs) outside of audit logs that have appropriate access controls.
 
