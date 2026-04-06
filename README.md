@@ -48,7 +48,7 @@ cat README.md
 | Data Architecture | 📋 Planned | AWS, Azure | Coming soon |
 | Event-Driven Architecture - EDA | 📋 Planned | AWS, Azure, GCP | Coming soon |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
-| CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | Coming soon |
+| CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
 | Observability standards | 📋 Planned | Multi-cloud | Coming soon |
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
