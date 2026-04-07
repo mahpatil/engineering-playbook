@@ -59,7 +59,7 @@ return switch (result) {
 
 ### Version and Setup
 
-- **Spring Boot 3.4+** (tracks Spring Framework 6.2+).
+- **Spring Boot 4.0+** (tracks Spring Framework 7.0+).
 - Use the Spring Initializer or the project archetype. Do not create projects manually.
 - Gradle is the build tool. Maven is only used for legacy services that are not worth migrating.
 
@@ -142,7 +142,7 @@ Do **not** expose `env`, `configprops`, `beans`, or `heapdump` on public endpoin
 
 ## Clean Architecture
 
-The project follows hexagonal (ports and adapters) architecture. The three layers are strictly enforced by ArchUnit tests.
+The project follows hexagonal (ports and adapters) architecture. The three layers (separate packages) are strictly enforced by ArchUnit tests.
 
 ### Layer Rules
 
@@ -156,7 +156,7 @@ domain/
 application/
   Depends on domain only
   Defines ports (interfaces): OrderRepository, EventPublisher, PaymentGateway
-  Contains use cases / application services
+  Contains use cases / application services / ports 
   Spring @Service is allowed here
 
 infrastructure/
