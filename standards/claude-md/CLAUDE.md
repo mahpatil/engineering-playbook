@@ -224,7 +224,7 @@ Every production service has a runbook in `docs/runbooks/` covering:
 All commits follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
-<type>(<scope>): <short description>
+<type>(<optional scope>): <short description>
 
 [optional body]
 
@@ -245,7 +245,7 @@ All commits follow [Conventional Commits](https://www.conventionalcommits.org/):
 ### Branching
 
 - **Trunk-based development.** `main` is always deployable.
-- Feature branches: `feat/<ticket-id>-short-description`. Live for < 2 days.
+- Feature branches: `feature/<ticket-id>-short-description`. Live for < 2 days.
 - No long-lived branches. If a feature takes weeks, use feature flags.
 - Branch protection: `main` requires passing CI + 1 approver review.
 
