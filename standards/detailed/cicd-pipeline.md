@@ -182,7 +182,7 @@ flowchart TD
 
     E --> F[CI/CD Pipeline]
     F --> F1[Terraform Validate]
-    F --> F2[Security Scan (checkov, tfsec)]
+    F --> F2[Security Scan - checkov, tfsec]
     F --> F3[Terraform Plan]
 
     F1 --> G
