@@ -47,6 +47,7 @@ brew install python3
 ```sh
 brew install openjdk
 brew install gradle
+brew install jenv #if using multiple java versions
 ```
 
 ### **Tools**
