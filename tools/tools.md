@@ -1,0 +1,72 @@
+# 🚀 WSL + Debian Development Environment Setup
+
+This README documents the steps and tools used to set up a modern development environment on **WSL (Windows Subsystem for Linux)** using **Debian**.
+
+---
+
+## 🧩 System Setup
+
+### **1. Update WSL to the latest version**
+Make sure your system is running the newest WSL release.
+
+### **2. Install Debian**
+```sh
+wsl --install debian
+```
+
+### **3. Start Debian**
+Launch from the Start Menu or run:
+```sh
+wsl -d debian
+```
+
+---
+
+## 🛠️ Tools to Install
+
+### **VS Code**
+Install VS Code on Windows and use the **Remote – WSL** extension to work inside Debian.
+
+---
+
+## 🍺 Homebrew Packages
+
+After installing Homebrew on Debian, install the following tools:
+
+### **Node.js**
+```sh
+brew install node
+```
+
+### **Python 3**
+```sh
+brew install python3
+```
+
+### **OpenJDK (latest)**
+```sh
+brew install openjdk
+brew install gradle
+```
+
+### **Tools**
+```sh
+brew install opencode
+brew install gh # GitHub CLI for managing repos, issues, PRs
+
+
+```
+---
+
+## 🤖 Ollama
+Install Ollama for running local LLMs inside WSL.  
+(Use the Linux installation instructions from the official Ollama site.)
+
+---
+
+## AI Tools Consumption and Costs
+
+https://claudespend.live/
+https://github.com/rtk-ai/rtk
+
+---
