@@ -23,6 +23,7 @@ This repository contains battle-tested technical standards and practices develop
 - **Implementation Code**: Production-ready code samples
 - **Non-Technical Guides**: Business-friendly explanations
 - **Multi-Cloud Examples**: AWS, Azure, and GCP implementations
+- **Tools**: Ready to use and adopt tools for your workstation
 
 ## 🚀 Quick Start
 ```bash
@@ -43,8 +44,8 @@ cat README.md
 | [Overall north star](./standards/overall/) | 🚧 Beta | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
 | [Claude Templates](./templates/) | 🚧 Beta | Claude Code | [View](./templates/README.md) |
 | [(dot)Claude Settings](./.claude) | 🚧 Beta | Claude Code | [View](./.claude/README.md) |
-| Microservices | 📋 Planned | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
-| API Design | 📋 Planned | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
+| Microservices | 📋 Beta | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
+| API Design | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
 | Data Architecture | 📋 Planned | AWS, Azure | Coming soon |
 | Event-Driven Architecture - EDA | 📋 Planned | AWS, Azure, GCP | Coming soon |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
@@ -53,6 +54,7 @@ cat README.md
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
 | Disaster Recovery - DR | 📋 Planned | AWS, Azure | Coming soon |
+| [Tools](./tools/tools.md) | 📋 Beta | Tools to setup for engineers | [View](./tools/tools.md) |
 
 
 ## 👨‍💻 For Technical Teams
