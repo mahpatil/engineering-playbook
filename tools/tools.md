@@ -37,7 +37,7 @@ After installing Homebrew on Desktop, install the following tools:
 
 ### **Node.js**
 ```sh
-brew install node
+brew install node nvm
 ```
 
 ### **Python 3**
@@ -56,8 +56,9 @@ brew install jenv #if using multiple java versions
 ```sh
 brew install opencode gemini-cli claude-code
 brew install gh # GitHub CLI for managing repos, issues, PRs
-
+brew install kubectl
 ```
+**Utilities**: wget, yarn, terraform, jq, yq, gradle, tree, sqllite, httpie (or postman), tig (text view git)
 
 ### **Ohmybash**
 OhMyBash or OhMyZsh is useful for liverly terminal
