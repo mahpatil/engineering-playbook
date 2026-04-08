@@ -26,6 +26,8 @@ wsl -d debian
 
 ### **VS Code** / **Zed**
 Install VS Code or **Zed** and use the **Remote – WSL** extension to work inside Debian.
+Themes: Monokai color theme.
+File Icon Theme: Minimual (CodeOSS)
 
 ---
 
@@ -35,7 +37,7 @@ After installing Homebrew on Desktop, install the following tools:
 
 ### **Node.js**
 ```sh
-brew install node
+brew install node nvm
 ```
 
 ### **Python 3**
@@ -54,13 +56,15 @@ brew install jenv #if using multiple java versions
 ```sh
 brew install opencode gemini-cli claude-code
 brew install gh # GitHub CLI for managing repos, issues, PRs
-
+brew install kubectl
 ```
+**Utilities**: wget, yarn, terraform, jq, yq, gradle, tree, sqllite, httpie (or postman), tig (text view git)
 
-### **Ohmyzsh**
+### **Ohmybash**
+OhMyBash or OhMyZsh is useful for liverly terminal
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" #Mac
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" #Windows DSL
 ```
 
 ---
