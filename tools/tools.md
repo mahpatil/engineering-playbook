@@ -26,6 +26,8 @@ wsl -d debian
 
 ### **VS Code** / **Zed**
 Install VS Code or **Zed** and use the **Remote – WSL** extension to work inside Debian.
+Themes: Monokai color theme.
+File Icon Theme: Minimual (CodeOSS)
 
 ---
 
@@ -57,10 +59,11 @@ brew install gh # GitHub CLI for managing repos, issues, PRs
 
 ```
 
-### **Ohmyzsh**
+### **Ohmybash**
+OhMyBash or OhMyZsh is useful for liverly terminal
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" #Mac
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)" #Windows DSL
 ```
 
 ---
