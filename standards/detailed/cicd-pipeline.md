@@ -206,7 +206,7 @@ flowchart TD
 ```mermaid
 flowchart LR
     Dev[Developer] --> GH[GitHub]
-    GH --> AI Coding Agent[AI Coding Agent Agent]
+    GH --> AI_Coding_Agent[AI Coding Agent Agent]
 
     AI Coding Agent --> TF[Terraform]
     TF --> Cloud[Cloud Landing Zone]
