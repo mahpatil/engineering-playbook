@@ -206,17 +206,17 @@ flowchart TD
 ```mermaid
 flowchart LR
     Dev[Developer] --> GH[GitHub]
-    GH --> AI Coding Agent[AI Coding Agent Agent]
+    GH --> AICodingAgent[AI Coding Agent Agent]
 
-    AI Coding Agent --> TF[Terraform]
+    AICodingAgent --> TF[Terraform]
     TF --> Cloud[Cloud Landing Zone]
 
-    Cloud --> Net[Network (VNet/Subnets)]
+    Cloud --> Network[(VNet/Subnets)]
     Cloud --> CA[Container Apps]
     Cloud --> KV[Key Vault]
     Cloud --> DB[Database]
 
-    CA --> App[Application (Python, Java, .NET) App]
+    CA --> App(Application \n Python, Java, .NET)
 
     KV --> App
     DB --> App
