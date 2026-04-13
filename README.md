@@ -44,6 +44,7 @@ cat README.md
 | [Overall north star](./standards/overall/) | 🚧 Beta | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
 | [Claude Templates](./templates/) | 🚧 Beta | Claude Code | [View](./templates/README.md) |
 | [(dot)Claude Settings](./.claude) | 🚧 Beta | Claude Code | [View](./.claude/README.md) |
+| [AI Hooks](./.claude/hooks/) | ✅ Stable | Claude Code, OpenCode, Codex | [View](./tools/tools.md#-ai-hooks-installer) |
 | Microservices | 📋 Beta | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
 | API Design | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
 | Data Architecture | 📋 Planned | AWS, Azure | Coming soon |
