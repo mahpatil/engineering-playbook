@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": "allow",
+  "plugin": [
+    "./.opencode/plugins/branch-prompt.ts",
+    "./.opencode/plugins/post-work-prompt.ts",
+    "./.opencode/plugins/commit-pr-prompt.ts",
+    "./.opencode/plugins/secret-protection.ts"
+  ]
+}
