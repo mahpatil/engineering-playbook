@@ -211,3 +211,6 @@ __marimo__/
 
 .DS_Store
 *.pdf
+
+opencode.json
+.claude/worktrees/
