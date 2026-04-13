@@ -75,6 +75,32 @@ Install Ollama for running local LLMs inside WSL.
 
 ---
 
+## 🪝 AI Hooks Installer
+
+Install shared lifecycle hooks for Claude Code, OpenCode, and Codex in one step.
+
+```sh
+# From the repo root — interactive menu
+./tools/install-hooks.sh
+
+# Or non-interactive
+./tools/install-hooks.sh claude    # Claude Code only
+./tools/install-hooks.sh opencode  # OpenCode only
+./tools/install-hooks.sh codex     # Codex only
+./tools/install-hooks.sh all       # All three
+```
+
+| Hook | Trigger | Purpose |
+|------|---------|---------|
+| `secret-protection.sh` | Pre-tool | Blocks reads of `.env`, keys, certs, credentials |
+| `branch-check.sh` | Prompt submit | Warns when starting new work on `main`/`master` |
+| `post-work-reminder.sh` | Post-bash | Reminds to update README, tests, OpenSpec after builds |
+| `pr-prompt.sh` | Post-bash | Prompts to raise a PR after `git commit` / `git push` |
+
+Requires: `jq` (`brew install jq`)
+
+---
+
 ## AI Tools Consumption and Costs
 
 https://claudespend.live/
