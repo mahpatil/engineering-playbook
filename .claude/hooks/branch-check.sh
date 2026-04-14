@@ -36,23 +36,10 @@ if [[ "$LOWER_BRANCH" != "main" && "$LOWER_BRANCH" != "master" && "$LOWER_BRANCH
   exit 0
 fi
 
-# Check days since last commit
-LAST_COMMIT_DATE=$(git log -1 --format="%ct" 2>/dev/null)
-NOW=$(date +%s)
-
-if [ -n "$LAST_COMMIT_DATE" ]; then
-  DAYS_SINCE=$(( (NOW - LAST_COMMIT_DATE) / 86400 ))
-else
-  DAYS_SINCE=999
-fi
-
-# Only warn if last commit is more than 1 day old, or if there's existing history suggesting divergence
-if [ "$DAYS_SINCE" -ge 1 ]; then
-  echo ""
-  echo "⚠️  BRANCH CHECK: You're on '${CURRENT_BRANCH}' (last commit ${DAYS_SINCE}d ago). The prompt suggests new work."
-  echo "Consider creating a feature branch before making changes:"
-  echo "  git checkout -b feature/<short-description>"
-  echo "Proceed on '${CURRENT_BRANCH}' only if this is intentional."
-fi
+echo ""
+echo "⚠️  BRANCH CHECK: You're on '${CURRENT_BRANCH}'. The prompt suggests new work."
+echo "Consider creating a feature branch before making changes:"
+echo "  git checkout -b feature/<short-description>"
+echo "Proceed on '${CURRENT_BRANCH}' only if this is intentional."
 
 exit 0
