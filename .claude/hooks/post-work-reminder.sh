@@ -16,7 +16,7 @@ EXIT_CODE=$(echo "$INPUT" | jq -r '.tool_response.exit_code // 0' 2>/dev/null)
 TRIGGER_KEYWORDS=("test" "build" "run" "start" "serve" "lint" "deploy" "migrate" "generate" "compile")
 TRIGGERED=false
 for kw in "${TRIGGER_KEYWORDS[@]}"; do
-  if echo "$COMMAND" | grep -qE "\b$kw\b"; then
+  if echo "$COMMAND" | grep -q "$kw"; then
     TRIGGERED=true
     break
   fi
