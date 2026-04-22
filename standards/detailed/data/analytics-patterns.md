@@ -6,7 +6,7 @@ Standards for designing analytical queries, reporting pipelines, and business in
 
 ## Why This Matters
 
-Analytics is where data becomes decisions. The patterns here are not academic — they are the difference between a finance team trusting their dashboard and maintaining a parallel spreadsheet, or a product team understanding whether a feature actually improved activation or just coincided with a seasonal uptick.
+Analytics is where data informs decisions. The patterns here are not academic — they are the difference between a finance team trusting their dashboard and maintaining a parallel spreadsheet, or a product team understanding whether a feature actually improved activation or just coincided with a seasonal uptick.
 
 Getting analytics patterns wrong manifests as: queries that take 10 minutes when they should take 10 seconds, reports that disagree with each other because they compute the same metric differently, cohort analyses that mix up calendar effects with behavioral effects, and funnels that show misleading conversion rates because the step ordering was wrong.
 

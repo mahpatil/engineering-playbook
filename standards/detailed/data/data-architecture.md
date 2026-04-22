@@ -19,7 +19,7 @@ The patterns here encode hard-won lessons about what breaks at scale: shared dat
 | Database type selection (relational vs NoSQL) | [database-type.md](./database-type.md) |
 | Data lake architecture (Bronze/Silver/Gold) | [data-lake.md](./data-lake.md) |
 | Analytics patterns (cohort, funnel, rolling, cumulative) | [analytics-patterns.md](./analytics-patterns.md) |
-| AI/ML data patterns (feature store, MLOps) | [ai-ml-patterns.md](./ai-ml-patterns.md) |
+| AI/ML data patterns (MLOps, feature store) | [ai-ml-patterns.md](./ai-ml-patterns.md) |
 | Multi-tenant data design on Azure | [azure-multi-tenant-data-design-patterns.md](./azure-multi-tenant-data-design-patterns.md) |
 | Integration patterns (CDC, Data Mesh) | [../integration/data-integration-patterns.md](../integration/data-integration-patterns.md) |
 
@@ -96,9 +96,9 @@ The patterns here encode hard-won lessons about what breaks at scale: shared dat
 ```
 Order Service          Payment Service        Inventory Service
      │                      │                      │
-     │── OrderPlaced ───────▶│                      │
-     │                      │── PaymentProcessed ──▶│
-     │                      │                      │── InventoryReserved
+     │── OrderPlaced ──────▶│                      │
+     │                      │─ PaymentProcessed ──▶│
+     │                      │                      │──▶ InventoryReserved
      │                      │                      │
      │  ← − − − − − − − − −  FAILURE: Payment Declined − − − − − − − −
      │                      │
@@ -167,7 +167,6 @@ Order Service          Payment Service        Inventory Service
 | **Saga** | Multi-service operations requiring all-or-nothing semantics | Distributed consistency without two-phase commit |
 | **CQRS** | Different read/write scaling or query shape requirements | Optimized read and write paths independently |
 | **Data Lake** | Analytics at scale; historical queries; ML training data | Operational databases stay fast; analytics scales cheaply |
-| **Feature Store** | ML systems with shared features across models | Eliminates training-serving skew; enables feature reuse |
 | **CDC** | Real-time replication from operational DB to lake or cache | Zero impact on source system; near-real-time sync |
 
 ---

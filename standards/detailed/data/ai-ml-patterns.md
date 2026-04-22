@@ -6,9 +6,9 @@ Standards for data engineering in machine learning pipelines, feature stores, an
 
 ## Why This Matters
 
-Machine learning models are only as good as the data they are trained and served with. The dominant failure mode in production ML is not model architecture — it is data: training on features computed differently than inference receives, using stale features at serving time, training on data that leaks future information into the past, or having no mechanism to detect when the data distribution has shifted and the model's predictions have quietly degraded.
+Machine learning models are only as good as the data they are trained and served with. The dominant failure mode in production ML is not model architecture or design — it is data: training on features computed differently than inference receives, using stale features at serving time, training on data that leaks future information into the past, or having no mechanism to detect when the data distribution has shifted and the model's predictions have quietly degraded.
 
-The patterns here exist because ML has unique data requirements that general-purpose data pipelines do not address:
+Machine Learning has unique data requirements that general-purpose data pipelines do not address:
 - **Training-serving skew**: if the feature computation at training differs even slightly from serving, model quality degrades silently
 - **Point-in-time correctness**: ML models must be trained on data as it existed at prediction time, not with the benefit of hindsight
 - **Feature reuse**: recomputing the same features independently per team is expensive, inconsistent, and creates drift
@@ -24,6 +24,7 @@ The patterns here exist because ML has unique data requirements that general-pur
 | **Time-to-Market** | Feature reuse via a feature store means teams don't rebuild the same signals independently |
 | **Reliability** | Monitoring and retraining pipelines keep models performing as data distribution shifts |
 | **Compliance** | Audit trails on training data and model versions support regulatory explainability requirements |
+| **Bias** | Use representative data, fair labeling, and continuous group-wise performance and fairness checks and adopt Responsible AI practices |
 | **Cost** | Shared feature computation avoids duplicate processing across teams |
 
 ---
@@ -44,6 +45,17 @@ The patterns here exist because ML has unique data requirements that general-pur
                                             └──────────────────┘
 ```
 
+**Silver** which is cleaned, conformed, joined, with basic quality rules applied; is the best layer for **ML Engineering** for following reasons:
+- Data quality - Silver applies cleaning, dedup, standardization, and conformance while still preserving event-level detail.
+- Flexibility - you can compute many different features vs aggregated data in Gold
+- Point-in-time correctness - typically doesnt exist in Gold typically as they may have future knowledge and aggregation
+- Reproducibility and auditability
+- Separation of concerns - Bronze is for ingestion and retention & gold for business consumption.
+
+
+
+
+
 ---
 
 ## Core Patterns
@@ -55,7 +67,7 @@ The patterns here exist because ML has unique data requirements that general-pur
 **Why:** Without a feature store, every team computes their own version of "user 30-day purchase count." They compute it differently, update it on different schedules, and the training pipeline uses a nightly batch while the serving pipeline uses a real-time count — producing training-serving skew that silently degrades the model. A feature store computes each feature once, consistently, and serves it to both paths.
 
 **How:**
-- Define features as code (Python or YAML): the transformation logic, the data source, and the update cadence
+- Define features as code (Python or YAML using feast or alternative): the transformation logic, the data source, and the update cadence
 - Offline store: columnar storage (Parquet/Delta) with time-travel support for point-in-time training dataset construction
 - Online store: low-latency key-value store (Redis, DynamoDB) for < 10ms feature retrieval at inference time
 - Sync offline → online on a defined schedule or via streaming (Kafka → feature pipeline → online store)
