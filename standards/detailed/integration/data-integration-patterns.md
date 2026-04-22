@@ -10,8 +10,8 @@ Capture database changes in real-time and propagate them downstream.
 
 ```
 ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
-│   Source DB   │    │    CDC       │    │  Target      │
-│  (Postgres)   │───▶│  (Debezium)  │───▶│  (Kafka)     │
+│   Source DB  │    │    CDC       │    │  Target      │
+│  (Postgres)  │───▶│  (Debezium)  │───▶│  (Kafka)     │
 └──────────────┘    └──────────────┘    └──────────────┘
                            │
                            ▼
@@ -47,3 +47,4 @@ Distribute data ownership across domains, treating data as a product.
 |---------|-------------|-------------|
 | CDC | Real-time data sync | Near-real-time analytics |
 | Data Mesh | Large orgs with many domains | Scalable data ownership |
+
