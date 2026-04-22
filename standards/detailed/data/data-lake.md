@@ -8,7 +8,7 @@ Standards for designing, building, and operating a data lake for analytics, repo
 
 Operational databases are optimized for transactions — they serve fast, narrow reads and writes for live systems. They are not designed to answer questions like "what was our revenue trend by region over the last 18 months by product category?" Running that kind of query against a live PostgreSQL cluster causes lock contention, degrades response times for real users, and still returns in minutes rather than seconds.
 
-A data lake solves a different problem: it accumulates all raw data from across your systems, preserves history, and makes it available for large-scale analytical workloads without touching production systems. Without it, analytics teams either query production directly (risky), build separate reports in each system (fragmented), or wait on engineering to export data manually (slow).
+A **data lake** solves a different problem: it accumulates all raw data from across your systems, preserves history, and makes it available for large-scale analytical workloads without touching production systems. Without it, analytics teams either query production directly (risky), build separate reports in each system (fragmented), or wait on engineering to export data manually (slow).
 
 The failure mode without a data lake: teams make decisions on stale exports, shadow spreadsheets diverge from the source of truth, and ML teams spend 80% of their time wrangling data instead of building models.
 

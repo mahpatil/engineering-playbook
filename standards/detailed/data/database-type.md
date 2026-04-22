@@ -6,7 +6,7 @@ Standards for choosing and operating the right database for each workload.
 
 ## Why This Matters
 
-Choosing the wrong database type is one of the most expensive architectural mistakes a team can make. It shows up as slow queries you can't fix, schema migrations that take hours, scaling walls you can't break through, or correctness bugs in financial data. Unlike application code, a database migration is painful, risky, and disruptive — re-platforming a live system under load is a multi-month effort. Get this right once, at design time.
+Selecting the wrong database type is one of the most expensive architectural mistakes a team can make. It shows up as slow queries, schema migrations that take hours, scaling issues, higher costs, or correctness bugs in financial data. Unlike application code, a database migration is painful, risky, and disruptive — re-platforming a live system under load is a multi-month effort. Get this right once, at design time.
 
 The cost of a wrong database choice compounds: your schema design, your API contracts, your operational tooling, and your team's expertise all build on top of the database type. A document store chosen for convenience will force you to reconstruct joins in application code; a relational database chosen for familiarity will become a bottleneck at write-heavy IoT scale.
 
@@ -20,14 +20,14 @@ The cost of a wrong database choice compounds: your schema design, your API cont
 | **Scale** | Horizontal NoSQL databases handle write volumes that vertical relational scaling cannot |
 | **Velocity** | Schema-flexible document stores let product teams iterate without migration ceremonies |
 | **Cost** | Right-sized stores avoid over-provisioning; using Postgres where Redis is sufficient wastes resources |
-| **Operability** | Familiar tooling reduces MTTR; a database your SRE team cannot debug is a liability |
 | **Data Integrity** | Enforced constraints at the database layer beat application-level discipline at scale |
+| **Operability** | Familiar tooling reduces MTTR; a database your SRE team cannot debug is a liability |
 
 ---
 
 ## Core Decision: Relational vs NoSQL
 
-Start here. This is the highest-leverage database decision you will make.
+Start here. This is the highest-leverage database decision one can make.
 
 | Factor | Choose Relational (PostgreSQL, MySQL) | Choose NoSQL |
 |--------|---------------------------------------|--------------|
@@ -162,7 +162,7 @@ Work through this before writing any schema. NoSQL schema mistakes are costly to
 | **Querying** | Flexible ad-hoc SQL | Predefined query paths; off-pattern queries are expensive or impossible |
 | **Scaling** | Scale up first; horizontal sharding is complex | Horizontal scale is a first-class primitive |
 | **Consistency** | Default strong consistency | Explicit choice per operation: strong / bounded staleness / eventual |
-| **Migrations** | ALTER TABLE with tooling (Flyway, Liquibase) | Additive-only; versioning in application code; no DB-layer enforcement |
+| **Migrations** | ALTER TABLE with tooling (Flyway, Liquibase) | Additive-only (no dropping/renaming); versioning in application code; no DB-layer enforcement |
 | **Data integrity** | Enforced by DB (NOT NULL, FK, CHECK) | Enforced by application — discipline required |
 
 ---
@@ -174,7 +174,7 @@ Using multiple databases in one system is normal and often correct. These rules 
 1. **One store owns each entity** — no entity is the source of truth in two databases simultaneously. Caches and search indexes are derived, not authoritative.
 2. **Sync via events, not dual-writes** — if a record in Postgres must appear in Elasticsearch, publish an event and let a consumer update the index. Dual-write from the application creates consistency gaps.
 3. **Stale reads documented** — if a secondary store (search index, cache) can be stale, document the staleness window. Surface it in API responses where it affects correctness.
-4. **Operations must be able to run it** — don't adopt a database your SRE team cannot operate or debug. Prefer managed services (RDS, DynamoDB, Atlas, Elastic Cloud) over self-managed unless you have dedicated DBA capacity.
+4. **Operations must be able to run it** — don't adopt a database your team cannot operate or debug. Prefer managed services (RDS, DynamoDB, Atlas, Elastic Cloud) over self-managed unless you have dedicated DBA capacity.
 
 ---
 
@@ -184,7 +184,7 @@ Using multiple databases in one system is normal and often correct. These rules 
 |--------------|---------|----------|
 | Using NoSQL because it's "modern" | Eventual consistency bugs in financial data, join pain at query time | Default to relational; only switch when you have a demonstrated need |
 | Shared database between services | Couples deployments, prevents independent schema evolution | Database per service or schema per service |
-| Using Postgres for session storage | Unnecessary load on your system of record | Redis or Valkey for ephemeral, high-throughput key-value |
+| Relational DB for session storage | Unnecessary load on your system of record | Redis or Valkey for ephemeral, high-throughput key-value |
 | Full-text search via SQL LIKE | Slow, no relevance ranking, no stemming | Elasticsearch or OpenSearch as a derived search index |
 | Skipping partition key design in Cassandra/DynamoDB | Hot partitions that defeat horizontal scale | Model partition keys against access patterns before writing schema |
 | Treating search engine as primary store | Data loss risk, no strong consistency | Search engine indexes primary data; never writes to it directly |
