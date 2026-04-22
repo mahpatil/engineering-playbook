@@ -47,7 +47,11 @@ cat README.md
 | [AI Hooks](./.claude/hooks/) | ✅ Stable | Claude Code, OpenCode, Codex | [View](./tools/tools.md#-ai-hooks-installer) |
 | Microservices | 📋 Beta | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
 | API Design | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
-| Data Architecture | 📋 Planned | AWS, Azure | Coming soon |
+| Data Architecture | 📋 Beta | AWS, Azure | [View](./standards/detailed/data/data-architecture.md) |
+| Data Lake | 📋 Beta | AWS, Azure | [View](./standards/detailed/data/data-lake.md) |
+| Analytics Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/data/analytics-patterns.md) |
+| AI/ML Data Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/data/ai-ml-patterns.md) |
+| Integration Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | Event-Driven Architecture - EDA | 📋 Planned | AWS, Azure, GCP | Coming soon |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
 | CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
