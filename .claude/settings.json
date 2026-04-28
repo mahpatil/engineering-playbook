@@ -26,15 +26,56 @@
     "respectIgnore": true
   },
   "hooks": {
-    "Stop": [
+    "UserPromptSubmit": [
       {
-        "matcher": "*",
+        "matcher": ".*",
         "hooks": [
           {
             "type": "command",
-            "command": "bash /Users/maheshpatil/.claude/hooks/session-tracker.sh"
+            "command": "bash /Users/maheshpatil/workspace-ibt/engineering-playbook/.claude/hooks/branch-check.sh"
           }
         ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Bash|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/maheshpatil/workspace-ibt/engineering-playbook/.claude/hooks/secret-protection.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/maheshpatil/workspace-ibt/engineering-playbook/.claude/hooks/git-signoff.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash /Users/maheshpatil/workspace-ibt/engineering-playbook/.claude/hooks/post-work-reminder.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash /Users/maheshpatil/workspace-ibt/engineering-playbook/.claude/hooks/pr-prompt.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": []
       }
     ]
   }
