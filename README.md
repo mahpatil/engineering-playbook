@@ -52,7 +52,7 @@ cat README.md
 | Integration Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
 | CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
-| Observability standards | 📋 Planned | Multi-cloud | Coming soon |
+| Observability standards | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
 | Disaster Recovery - DR | 📋 Planned | AWS, Azure | Coming soon |

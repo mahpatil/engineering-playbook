@@ -202,12 +202,9 @@ Consider:
 
 ### Related Standards
 TBC
-<!-- 
-- [Cloud-Native Standards](../02-cloud-native/README.md)
-- [Microservices Standards](../03-microservices/README.md)
-- [API Design Standards](../04-api-design/README.md)
-- [DevSecOps Standards](../07-devsecops/README.md)
-- [Observability Standards](../09-observability/README.md) -->
+- [Microservices Standards](../detailed/microservices.md)
+- [API Design Standards](../detailed/api-design.md)
+- [Observability Standards](../detailed/observability/README.md)
 
 ### Industry References
 
