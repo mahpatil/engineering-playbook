@@ -2,7 +2,7 @@
 
 A **selection matrix** across the observability surface: instrumentation, collector, metrics, logs, traces/APM, visualization, alerting/on-call, synthetic, RUM, and frontend analytics.
 
-> **Governance:** Prefer **OpenTelemetry + open-source / Grafana stack or the chosen cloud's native OTLP-backed service**. Vendors that only consume proprietary SDKs are disallowed at the instrumentation layer; a proprietary *backend* is acceptable if reached **only via OTLP**.
+> **Governance:** Prefer **OpenTelemetry + open-source or the chosen cloud's native OTLP-backed service**. Vendors that only consume proprietary SDKs are disallowed at the instrumentation layer; a proprietary *backend* is acceptable if reached **only via OTLP (OpenTelemetry Protocol)**.
 
 ---
 
