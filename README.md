@@ -41,14 +41,14 @@ cat README.md
 
 | Standard | Maturity | Cloud Support | README |
 |----------|----------|---------------|--------|
-| [Overall north star](./standards/overall/) | 🚧 Beta | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
+| [Overall north star](./standards/overall/) | ✅ Stable | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
 | [Claude Templates](./templates/) | 🚧 Beta | Claude Code | [View](./templates/README.md) |
 | [(dot)Claude Settings](./.claude) | 🚧 Beta | Claude Code | [View](./.claude/README.md) |
 | [AI Hooks](./.claude/hooks/) | ✅ Stable | Claude Code, OpenCode, Codex | [View](./tools/tools.md#-ai-hooks-installer) |
-| Microservices | 📋 Beta | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
+| Microservices | ✅ Stable | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
 | API Design | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
 | Data Architecture | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
-| Cloud Network Topology (Hub & Spoke, PCI, API Gateways) | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
+| Cloud Network Topology (Hub & Spoke, PCI, API Gateways) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | Integration Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
 | CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
