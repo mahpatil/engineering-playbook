@@ -1,6 +1,9 @@
 # Core Observability
 
-Standards for the foundation of observability: the three signals (logs, metrics, traces), OpenTelemetry (OTel) instrumentation, signal correlation, and the golden signals.
+Standards for the foundation of observability: 
+- The three pillars (logs, metrics, traces), 
+- Open standards - OpenTelemetry (OTel) instrumentation, signal correlation, and 
+- The golden signals.
 
 ---
 
@@ -16,15 +19,18 @@ The system is observable when an engineer can reconstruct, from telemetry alone:
 
 ---
 
-## The Three Signals (Pillars)
+## The Three Pillars (Data Types)
 
-| Signal | Answers | Nature | Primary Tooling |
+> Note: OpenTelemetry calls these three “signals.” This playbook says pillars to avoid collision with the Golden Signals (below).
+
+
+| Data Type | Answers | Nature | Primary Tooling |
 |--------|---------|--------|-----------------|
 | **Metrics** | *Is something happening? How much?* | Aggregate numerical data over time | Prometheus, Grafana, cloud-native metrics |
 | **Logs** | *What exactly happened for this event?* | Discrete, timestamped event records | ELK, Loki, cloud log stores |
 | **Traces** | *What is the path and cost of a request across services?* | Request-scoped, spans with causality | Jaeger, Tempo, APM backends |
 
-> **Newer signals (emerging but not mandatory):** Profiles (continuous profiling — e2e latency attribution) and Events (domain-level business events). Treat them as additive, not a replacement for the three pillars.
+> **Emerging data types:** Profiles (continuous profiling — e2e latency attribution) and Events (domain-level business events). Treat them as additive, not a replacement for the three pillars.
 
 ---
 
@@ -45,11 +51,13 @@ OpenTelemetry is the **industry-standard, vendor-neutral** framework for produci
 
 | Component | Role |
 |-----------|------|
-| **OTel SDK** | In-process library producing spans, metrics, log records |
-| **OTel Auto-instrumentation / Agents** | Zero or low-code capture of common frameworks (HTTP server/client, DB, messaging, RPC) |
-| **OTel API + Manual instrumentation** | Domain-specific spans, metrics, semantic attributes |
+| **OTel SDK** | In-process library producing spans, metrics, log records. This is similar to sensors and wiring in the app. |
+| **OTel Auto-instrumentation / Agents** | Zero or low-code capture of common frameworks (HTTP server/client, DB, messaging, RPC). These are pre-built sensors that snap into common application/systems |
+| **OTel API + Manual instrumentation** | Domain-specific spans, metrics, semantic attributes. These are manual sensors you craete. |
 | **OTel Collector** | Agent/gateway that receives, processes, and routes telemetry to backends (see [OTel Collector](./otel-collector.md)) |
 | **OTLP** | The standard protocol for exporting (HTTP/gRPC, port 4318 / 4317) |
+
+In summary, the **SDK** makes telemetry possible, **auto-instrumentation** gives you broad coverage for free, **manual instrumentation** adds the domain detail only you know matters, and the **Collector** takes all of it and ships it to your dashboards — with **OTLP** (the OpenTelemetry Protocol) acting as the common language that carries the data between them.
 
 ---
 
@@ -140,7 +148,7 @@ public class OrderService {
 
 Use **OTel semantic conventions** for attribute names (`http.request.method`, `http.response.status_code`, `db.system`, `messaging.destination.name`, `service.name`, …). Never invent ad-hoc keys for standardized concepts — consistency is what makes cross-service correlation possible.
 
-**Reserved attributes for all signals:**
+**Reserved attributes for all data types:**
 | Attribute | Purpose |
 |-----------|---------|
 | `service.name` | Logical service name (== the service in the catalog) |
@@ -162,9 +170,12 @@ Use **OTel semantic conventions** for attribute names (`http.request.method`, `h
 | **Saturation** | How full is the system? |
 
 ### RED (request-oriented — use for services)
-- **Rate** — requests per second
-- **Errors** — count, and % of requests failing
-- **Duration** — distributions, esp. p50/p95/p99
+| Type | Question | Signal | 
+|--------|----------|---------|
+| **Rate** | requests per second | Traffic | 
+| **Errors** | count, and % of requests failing | Errors |
+| **Duration** | distributions, esp. p50/p95/p99 | Latency |
+
 
 ### USE (resource-oriented — use for infrastructure)
 - **Utilization** — % of a resource that is busy
@@ -190,7 +201,7 @@ Logs, metrics, and traces are only truly useful when they can be **joined on a s
 **Joining in practice:**
 - From a **log** → click the `trace_id` to open the full trace in the APM backend.
 - From a **trace** → click a span to see its associated logs.
-- From a **metric** → open by label (service, route) and drill into a representative trace or the log stream.
+- From a **metric** → open by label (service, route) and drill into a representative trace (trace_ids joined to metric data points) or the log stream.
 
 ---
 
@@ -200,7 +211,7 @@ Health endpoints are part of observability — they are the signal production/co
 
 - `/health/live` — process is alive (no dependencies) → liveness probe
 - `/health/ready` — can serve traffic (checks DB, cache, downstream → readiness probe)
-- `/health/startup` — has completed initialization → startup probe (Java launch)
+- `/health/startup` — has completed initialization → startup probe
 
 These become inputs to availability SLIs and to the orchestrator (see [microservices](../microservices.md#8-observability-built-in)).
 
@@ -213,7 +224,7 @@ These become inputs to availability SLIs and to the orchestrator (see [microserv
 | Instrumentation | OTel SDK + auto-instrumentation in every service, from day one |
 | Signals | Logs, metrics, and traces all emitted via OTLP |
 | Correlation | `trace_id`/`span_id` present on logs; context propagated across all hops |
-| Reserved attributes | `service.name`, `service.version`, `deployment.environment` present on all signals |
+| Reserved attributes | `cloud.provider`, `host.id`, `service.name`, `service.version`, `deployment.environment` present on all signals |
 | Backend decoupling | No vendor SDKs in application code |
 | Health | `/health/live`, `/health/ready`; `/health/startup` where applicable |
 

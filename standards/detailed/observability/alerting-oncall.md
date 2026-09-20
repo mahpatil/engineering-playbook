@@ -6,7 +6,7 @@ Standards for **alerting philosophy**, **severity and routing**, **escalation**,
 
 ## Alerting Philosophy
 
-**An alert should represent user impact (or imminent user impact), and every alert must be actionable by the person it pages.**
+An alert should represent **user impact** (or imminent user impact), and every alert must be **actionable** by the person it pages.
 
 - If an alert fires and the recipient cannot or need not act → it is **noise**, and should be deleted or converted to a ticket/dashboard.
 - **Page on user impact** (SLO burn rate — see [SLI/SLO](./sli-slo.md)), not on raw sensor thresholds that don't map to users.
@@ -19,7 +19,7 @@ Standards for **alerting philosophy**, **severity and routing**, **escalation**,
 
 | Source | Examples | Notes |
 |--------|----------|-------|
-| Metrics | Prometheus / cloud-native metrics | Primary; burn-rate & resource alerts |
+| Metrics | Prometheus / cloud-native metrics | Primary (user facing RED symptoms); burn-rate & resource alerts |
 | SLO | Burn-rate alerts (14.4×/6×/1×) | Highest signal |
 | Logs | Select error-rate / anomaly patterns | Secondary, keep sparse |
 | Synthetic | Uptime / API / browser checks | Independent of instrumentation (see [Synthetic & RUM](./synthetic-rum.md)) |
@@ -29,6 +29,7 @@ Standards for **alerting philosophy**, **severity and routing**, **escalation**,
 ---
 
 ## Severity Model
+This section is purely for guidance and would need to be tailored to your organization / needs.
 
 | Severity | Page? | Response | Examples |
 |----------|-------|----------|----------|
@@ -57,7 +58,7 @@ Standards for **alerting philosophy**, **severity and routing**, **escalation**,
 
 ---
 
-## PagerDuty Integration
+## Alerting & Incident response Integration
 
 PagerDuty is the reference **on-call / incident-response** platform. Standards for wiring alerts to PagerDuty:
 

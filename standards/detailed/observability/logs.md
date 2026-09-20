@@ -54,11 +54,15 @@ All logs use **structured JSON** with a consistent schema:
       <includeMdcKeyName>service.name</includeMdcKeyName>
     </encoder>
   </appender>
+  <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender"/>
   <root level="INFO">
     <appender-ref ref="JSON"/>
+    <appender-ref ref="OTEL"/>
   </root>
 </configuration>
 ```
+
+The OpenTelemetry Logback appender emits log records over OTLP. Configure the matching OTel Logback appender dependency and point the Java agent/SDK at the Collector, for example with `OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318`. Keep the JSON appender when stdout/filelog collection is also required; the OTLP appender is the required application-log path for the three-pillar standard.
 
 ```java
 @Service
