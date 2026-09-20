@@ -10,7 +10,7 @@ Standards for defining **Service Level Indicators (SLIs)** and **Service Level O
 |------|-----------|
 | **SLI** | A **measure** of a user-facing behavior (e.g., "fraction of valid requests served in < 500ms"). |
 | **SLO** | The **target** for that SLI over a period (e.g., "99.5% of requests < 500ms over rolling 30 days"). |
-| **Error budget** | `1 − SLO` — how much unreliability is *allowed* per period before users are hurt. |
+| **Error budget** | `1 − SLO` — how much unreliability is *allowed* per period before users are impacted. |
 | **Burn rate** | How fast the error budget is being consumed relative to the SLO. |
 
 > **SLA ≠ SLO.** SLA is a contractual/legal commitment (often financial). SLO is an internal engineering target. Set internal SLOs **stricter than** (> or =) legal SLAs so you have margin.
