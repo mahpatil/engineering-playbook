@@ -60,7 +60,7 @@ This section is purely for guidance and would need to be tailored to your organi
 
 ## Alerting & Incident response Integration
 
-PagerDuty is the reference **on-call / incident-response** platform. Standards for wiring alerts to PagerDuty:
+Tools such as a PagerDuty are **on-call / incident-response** platform. Below are some standards for wiring alerts to PagerDuty:
 
 | Concern | Standard |
 |---------|----------|
@@ -70,7 +70,7 @@ PagerDuty is the reference **on-call / incident-response** platform. Standards f
 | Dedupes | **Dedup keyed on `service + alert name`** to collapse flapping alerts |
 | Escalation policy | Teams define primary → secondary → manager escalate (with timeouts) |
 | Acknowledgement | On-call ACKs within target; auto-escalate if not |
-| Integrations | Versatile/new-relic/datadog/cloud-native → PagerDuty; also **Genie/cloud-native** equivalents allowed |
+| Integrations | Grafana/ELK/NewRelic/cloud-native → PagerDuty; also **AI/cloud-native** equivalents allowed |
 | Event orchestration | Route different alert types (metrics vs synth vs logs) to differing policies if useful |
 
 ### Prometheus → Alertmanager → PagerDuty (reference flow)
@@ -81,24 +81,6 @@ flowchart LR
     C --> D[On-call primary]
     D -->|no ack in N min| E[Secondary]
     E -->|no ack| F[Escalate to team lead / IM]
-```
-
-```yaml
-# alertmanager config (excerpt)
-route:
-  group_by: ['service']
-  receiver: 'pagerduty'
-  routes:
-    - matchers: [ 'severity = critical' ]
-      receiver: 'pagerduty-critical'
-      group_wait: 30s
-...
-receivers:
-  - name: pagerduty-critical
-    pagerduty_configs:
-      - service_key: '<service_key>'
-        severity: 'critical'
-        url: 'https://events.pagerduty.com/v2/enqueue'
 ```
 
 ---
@@ -137,6 +119,7 @@ Failures placing orders for affected users/routes.
 ## Escalation
 - Slack: #order-service-alerts
 - PagerDuty: Order Service rotation
+
 ```
 
 Runbooks are **versioned as code** next to the service, same repo, reviewed on PR.

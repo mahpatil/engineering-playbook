@@ -76,14 +76,13 @@ executor.submit(() -> {
 
 ### Kafka producer example
 ```java
-@Bean
-public ProducerFactory<String,Object> producerFactory() {
-    return new DefaultKafkaProducerFactory<>(configs,
-        new StringSerializer(), new JsonSerializer<>(),
-        true);   // instrumentation propagates trace data into headers
-}
+var template = new KafkaTemplate<>(producerFactory);
+    template.setObservationEnabled(true);
 ```
-
+or
+```yaml
+spring.kafka.template.observation-enabled=true
+```
 ---
 
 ## Trace → Metrics (the service map & RED)
@@ -98,8 +97,7 @@ Result: you can toggle between "one trace" and "system-wide aggregates" without 
 ---
 
 ## Sampling Strategy
-
-Sampling trades fidelity for cost/volume. Standard (see [OTel Collector](./otel-collector.md#processor-standards)):
+Sampling implies you don’t record every transaction, trace, or event — you keep a representative subset and drop the rest; specifically to control costs, improved performance and signal over noise. Sampling trades fidelity for cost/volume. Standard (see [OTel Collector](./otel-collector.md#processor-standards)):
 
 | Environment | Traces | Metrics |
 |-------------|--------|---------|
