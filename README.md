@@ -47,7 +47,8 @@ cat README.md
 | Data Architecture | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
 | Cloud Network Topology (Hub & Spoke, PCI, API Gateways) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | Integration Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
-| CI/CD (DevSecOps) | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
+| DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
+| CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
 | Observability standards | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
