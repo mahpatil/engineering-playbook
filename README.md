@@ -43,13 +43,13 @@ cat README.md
 |----------|----------|---------------|--------|
 | [Overall north star](./standards/overall/) | ✅ Stable | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
 | [Microservices](./standards/detailed/microservices.md) | ✅ Stable | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
-| API Design | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
-| Data Architecture | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
-| Cloud Network Topology (Hub & Spoke, PCI, API Gateways) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
-| Integration Patterns | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
+| [API Design](./standards/detailed/api-design.md) | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
+| [Data Architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
+| [Cloud Network Topology (Hub & Spoke, PCI, API Gateways)](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
+| [Integration Patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
-| CI/CD Pipeline | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
-| Observability standards | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
+| [CI/CD Pipeline](./standards/detailed/cicd-pipeline.md) | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
+| [Observability standards](./standards/detailed/observability/README.md) | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
 | Disaster Recovery - DR | 📋 Planned | AWS, Azure | Coming soon |
