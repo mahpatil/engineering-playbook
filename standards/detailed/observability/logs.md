@@ -2,6 +2,18 @@
 
 Standards for **structured logging** and the **centralized log pipeline** — how application logs are produced, transported, stored, searched, and correlated with traces. Covers the ELK stack, Grafana Loki, and cloud-native log stores.
 
+## What is centralized logging?
+
+Applications in a distributed system (made of hundreds of microservices) each emit their own log output. Without centralization, those logs live in per-instance files, per-service stores, or ephemeral containers — and no one can see a request as it crosses a dozen services, find the cause of an outage, or answer "what happened at 2:04 AM" across the fleet. **Centralized logging** ships all application and infrastructure logs into one searchable, long-lived pipeline so they can be investigated, alerted on, and audited from a single place.
+
+## Why it's required
+
+- **Distributed debugging:** A failing request spans multiple services — you need all its log lines in one searchable store, correlated by a common `trace_id`.
+- **Ephemeral infrastructure:** Containers and pods are replaced constantly. Logs only exist in the pipeline, not in the deleted instance.
+- **Faster MTTR:** Search, filter, and link from log → trace → dashboard instead of ssh-ing into hosts and grepping files.
+- **Compliance & audit:** Retention and access-controlled archives of who/what/when are regulatory requirements, not optional.
+- **Cost control:** A single pipeline with volume governance beats dozens of ungoverned per-team stores.
+
 ---
 
 ## Principles
@@ -44,23 +56,27 @@ All logs use **structured JSON** with a consistent schema:
 
 ## Java / Logback Example
 
-```xml
-<!-- logback-spring.xml -->
-<configuration>
-  <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-      <includeMdcKeyName>traceId</includeMdcKeyName>
-      <includeMdcKeyName>spanId</includeMdcKeyName>
-      <includeMdcKeyName>service.name</includeMdcKeyName>
-    </encoder>
-  </appender>
-  <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender"/>
-  <root level="INFO">
-    <appender-ref ref="JSON"/>
-    <appender-ref ref="OTEL"/>
-  </root>
-</configuration>
+```yaml
+configuration:
+  appender:
+    - name: JSON
+      class: ch.qos.logback.core.ConsoleAppender
+      encoder:
+        class: net.logstash.logback.encoder.LogstashEncoder
+        includeMdcKeyName:
+          - traceId
+          - spanId
+          - service.name
+    - name: OTEL
+      class: io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender
+  root:
+    level: INFO
+    appenderRef:
+      - ref: JSON
+      - ref: OTEL
 ```
+
+> Requires Logback 1.3+ for YAML configuration (`logback-spring.yml`). For older Logback, use the equivalent XML in `logback-spring.xml`.
 
 The OpenTelemetry Logback appender emits log records over OTLP. Configure the matching OTel Logback appender dependency and point the Java agent/SDK at the Collector, for example with `OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318`. Keep the JSON appender when stdout/filelog collection is also required; the OTLP appender is the required application-log path for the three-pillar standard.
 
