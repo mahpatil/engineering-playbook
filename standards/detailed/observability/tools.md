@@ -37,21 +37,21 @@ A **selection matrix** across the observability surface: instrumentation, collec
 |----------|------|
 | Self-hosted open source | **Prometheus**, **Grafana Mimir** / VictoriaMetrics (long-term, HA), Thanos |
 | Cloud-native | CloudWatch (Amazon Managed Prometheus / CloudWatch metrics), Azure Monitor / Metrics, GCP Cloud Monitoring |
-| SaaS | Datadog, New Relic, Grafana Cloud |
+| SaaS | Datadog, New Relic, Grafana Cloud, Honeycomb, Elastic |
 
 ### Logs backends
 | Category | Tool |
 |----------|------|
 | Open source | **Grafana Loki**, **ELK (Elasticsearch + Kibana)**, OpenSearch |
 | Cloud-native | CloudWatch Logs, Azure Log Analytics / Sentinel, GCP Cloud Logging |
-| SaaS | Datadog Logs, New Relic Logs, Grafana Cloud Logs (Loki) |
+| SaaS | Datadog Logs, New Relic Logs, Grafana Cloud Logs (Loki), Elastic |
 
 ### Traces / APM backends
 | Category | Tool |
 |----------|------|
 | Open source | **Grafana Tempo**, **Jaeger**, Zipkin (legacy) |
 | Cloud-native | **AWS X-Ray / ADOT**, **Azure Application Insights**, **GCP Cloud Trace** |
-| SaaS | Datadog APM, New Relic, Dynatrace, Honeycomb |
+| SaaS | Datadog APM, New Relic, Dynatrace, Honeycomb, Elastic |
 
 ---
 
@@ -80,8 +80,8 @@ A **selection matrix** across the observability surface: instrumentation, collec
 
 | Category | Tool |
 |----------|------|
-| Synthetic / API / check | Grafana Synthetic Monitoring (**k6**), **Grafana k6** (load/checks), Datadog Synthetics, New Relic Synthetics, AWS CloudWatch Synthetic Canaries, Azure App Insights availability, GCP Synthetic Monitoring |
-| RUM / frontend | **Grafana Faro**, Datadog RUM, New Relic Browser, Azure App Insights JS, GCP Web Vitals |
+| Synthetic / API / check | Grafana Synthetic Monitoring (**k6**), **Grafana k6** (load/checks), Datadog Synthetics, New Relic Synthetics, AWS CloudWatch, Azure App Insights availability, GCP Synthetic Monitoring, UptimeRobot |
+| RUM / frontend | Grafana Faro, Datadog RUM, New Relic Browser, Azure App Insights JS, GCP Web Vitals |
 | Load testing (related) | k6, Locust, JMeter |
 
 ---
@@ -91,26 +91,19 @@ A **selection matrix** across the observability surface: instrumentation, collec
 ```mermaid
 flowchart LR
     subgraph Services
-      A[App (OTel SDK + agent)]
-      B[Frontend (OTel RUM)]
+      A[App OTel SDK + agent]
+      B[Frontend -OTel RUM]
     end
     C[OTel Collector\nagent + gateway]
-    D[Grafana stack]
     A --> C
     B --> C
     C --> T[Tempo - traces]
     C --> L[Loki - logs]
     C --> M[Mimir - metrics]
-    D --> G[Grafana\n(unified dashboards)]
-    M -->|SLO burn| R[Alerting]
+    M --> |SLO burn| R[Alerting]
     R --> P[PagerDuty]
 ```
 
-**Default open-source stack:** OTel → OTel Collector → **Grafana + Tempo + Loki + Mimir** → Grafana Alerting → PagerDuty, with **Faro** for RUM and **k6 Synthetic Monitoring** for active checks.
-
-**Cloud-native default:** OTel → ADOT / native OTLP → **cloud-native APM + metrics + logs** (X-Ray, CloudWatch, Azure App Insights, GCP Trace) → cloud alerting → PagerDuty, everything reached via OTLP so it stays portable.
-
-**ELK default:** OTel → Collector (`elasticsearch`/`kafka` exporters) → **Elasticsearch + Kibana** for logs/SIEM, with Tempo or Jaeger for traces; Grafana optional for unified dashboards.
 
 ---
 
@@ -118,7 +111,7 @@ flowchart LR
 
 | Situation | Prefer |
 |-----------|--------|
-| Clear cloud commitment, want zero self-hosting | Cloud-native OTLP backends |
+| Clear cloud commitment, zero self-hosting | Cloud-native OTLP backends |
 | Open-source-first, budget-sensitive, want a single UI | Grafana stack (Tempo/Loki/Mimir) |
 | Deep log search + existing security/SIEM needs | ELK (Elasticsearch + Kibana) |
 | Managed SaaS, max features per dollar | Datadog / New Relic / Grafana Cloud (all OTel-native) |
@@ -138,9 +131,7 @@ flowchart LR
 
 | Backend | Traces | Metrics | Logs | Native OTLP |
 |---------|:------:|:-------:|:----:|:-----------:|
-| Grafana Tempo | ✅ | — | — | ✅ |
-| Grafana Loki | — | — | ✅ | ✅ (logproto issue) |
-| Grafana Mimir / Prometheus | — | ✅ | — | ✅ (OTLP traits) |
+| Grafana | ✅ (Tempo) | ✅ (Prometheus) | ✅ (Loki) | ✅ (OTLP traits) |
 | Jaeger | ✅ | — | — | ✅ |
 | Elasticsearch / OpenSearch | (with APM) | — | ✅ | via exporter |
 | CloudWatch / ADOT (AWS) | ✅ X-Ray | ✅ | ✅ | ✅ |
