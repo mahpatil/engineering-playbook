@@ -20,7 +20,23 @@ Patterns for synchronizing, streaming, and governing data across services, domai
 
 ## Core Principles
 
-### 1. Change Data Capture (CDC) for Real-Time Sync
+### 1. Event-Driven Data Sync (Most Preferred)
+
+Prefer publishing domain events over synchronous cross-service queries when a consumer just needs to know a fact changed.
+
+**What this means:**
+- Producers publish events (`OrderPlaced`, `CustomerUpdated`) to a broker; consumers subscribe independently
+- Events are notifications of fact, not RPC calls — the producer never waits on a consumer
+- Use the outbox pattern (write the event in the same transaction as the state change, publish asynchronously) to avoid dual-write inconsistency
+- Prefer fat events (enough payload for common consumers) over thin events that force a callback to fetch details, unless payloads carry sensitive data
+
+**Decision guide:**
+- "Another system needs to react to something that happened" → event
+- "I need to query current state right now" → synchronous API or a queryable read model kept in sync via CDC/events
+
+---
+
+### 2. Change Data Capture (CDC) for Real-Time Sync
 
 Capture database changes at the source and propagate them downstream without impacting the source system's transactional workload.
 
@@ -50,25 +66,9 @@ Capture database changes at the source and propagate them downstream without imp
 
 ---
 
-### 2. Event-Driven Data Sync
-
-Prefer publishing domain events over synchronous cross-service queries when a consumer just needs to know a fact changed.
-
-**What this means:**
-- Producers publish events (`OrderPlaced`, `CustomerUpdated`) to a broker; consumers subscribe independently
-- Events are notifications of fact, not RPC calls — the producer never waits on a consumer
-- Use the outbox pattern (write the event in the same transaction as the state change, publish asynchronously) to avoid dual-write inconsistency
-- Prefer fat events (enough payload for common consumers) over thin events that force a callback to fetch details, unless payloads carry sensitive data
-
-**Decision guide:**
-- "Another system needs to react to something that happened" → event
-- "I need to query current state right now" → synchronous API or a queryable read model kept in sync via CDC/events
-
----
-
 ### 3. Batch ETL / ELT for Bulk and Historical Data
 
-Not everything needs to be real-time. Bulk historical loads, large joins, and cost-sensitive analytics workloads are better served by scheduled batch pipelines.
+Not all use cases are real-time; for e.g. bulk historical loads, large joins, and cost-sensitive analytics workloads are better served by scheduled batch pipelines.
 
 **What this means:**
 - ETL (transform before load) when the target enforces a strict schema or transformation logic is heavy
@@ -81,7 +81,7 @@ Not everything needs to be real-time. Bulk historical loads, large joins, and co
 
 ---
 
-### 4. Reverse ETL
+### 4. Reverse ETL (for Analytical data)
 
 Push curated, aggregated data from the warehouse back into operational systems (CRM, support tools, marketing platforms) so business tools see analytics-derived fields.
 
@@ -123,7 +123,7 @@ Distributed data pipelines redeliver messages. Design every consumer to produce 
 - Assign every event a stable, unique key (event ID or natural business key) and dedupe on it at the consumer
 - Prefer idempotent upserts (`INSERT ... ON CONFLICT UPDATE`) over blind inserts in downstream stores
 - Where true exactly-once is required, use transactional producers/consumers (Kafka transactions) rather than hand-rolled dedup logic
-- Make retries safe by default — a retried write must never double-count or double-charge
+- Make retries safe by default (at-least-once processing) — a retried write must never double-count or double-charge
 
 ---
 
@@ -141,7 +141,7 @@ Bad data breaks trust faster than downtime. Validate data at every integration b
 
 ### 8. Data Mesh and Federated Ownership
 
-Distribute data ownership across domains, treating data as a product rather than centralizing all integration through one team.
+Distribute data ownership across domains, treating data as a product rather than centralizing all integration within a single team.
 
 | Principle | Implementation |
 |-----------|-----------------|
@@ -216,8 +216,8 @@ Every integration pipeline assumes its downstream or upstream dependency will be
 
 | Pattern | When to Use | Key Benefit |
 |---------|-------------|-------------|
-| CDC | Real-time sync off a database's transaction log | Near-real-time analytics without source load |
 | Event-Driven Sync | Cross-service notification of state changes | Decoupled producers/consumers |
+| CDC | Real-time sync off a database's transaction log | Near-real-time analytics without source load |
 | Batch ETL/ELT | Bulk historical loads, heavy aggregations | Cost-efficient, replayable bulk processing |
 | Reverse ETL | Push warehouse-derived data into operational tools | Business tools see analytics-derived fields |
 | Schema Contracts | Any shared event/CDC/extract schema | Safe, independent producer/consumer evolution |
