@@ -47,8 +47,7 @@ cat README.md
 | [Data Architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
 | [Cloud Network Topology (Hub & Spoke, PCI, API Gateways)](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | [Integration Patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
-| DevSecOps practices | 📋 Planned | Multi-cloud | Coming soon |
-| [CI/CD Pipeline](./standards/detailed/cicd-pipeline.md) | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
+| [CI/CD Pipeline - DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
 | [Observability standards](./standards/detailed/observability/README.md) | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
 | High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
 | Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
