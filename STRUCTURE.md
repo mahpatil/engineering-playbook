@@ -98,18 +98,17 @@ engineering-playbook/
 │   │   │   └── troubleshooting.md
 │   │   └── tests/
 │   │
-│   ├── 09-observability/
-│   │   ├── README.md
-│   │   ├── architecture/
-│   │   ├── examples/
-│   │   │   ├── prometheus/
-│   │   │   ├── elasticsearch-kibana/
-│   │   │   ├── jaeger/
-│   │   │   └── opentelemetry/
-│   │   ├── dashboards/
-│   │   │   ├── grafana/
-│   │   │   └── kibana/
-│   │   └── docs/
+│   ├── 09-observability/            # Standards: standards/detailed/observability/
+│   │   ├── README.md                # Index + guiding principles + related standards
+│   │   ├── core-observability.md    # Three pillars, OTel SDK/instrumentation, correlation, RED/USE
+│   │   ├── otel-collector.md        # Collector pipelines, processors, exporters, cloud-native integration
+│   │   ├── apm.md                   # Distributed tracing, context propagation, service map, sampling
+│   │   ├── logs.md                  # Structured logging, ELK/Loki/cloud-native log pipelines
+│   │   ├── metrics-dashboards.md    # Metric semantics, RED/USE, Grafana dashboards-as-code
+│   │   ├── sli-slo.md               # SLI/SLO definitions, error budgets, burn-rate alerting
+│   │   ├── alerting-oncall.md       # Severity, routing, escalation, PagerDuty, runbooks
+│   │   ├── synthetic-rum.md         # Synthetic monitoring + RUM / frontend UX analytics
+│   │   └── tools.md                 # Full tool matrix (open-source, cloud-native, commercial)
 │   │
 │   ├── 10-high-availability/
 │   │   ├── README.md
