@@ -98,7 +98,7 @@ The GitHub Actions quality gate runs on pushes and pull requests. A change is re
 
 ## 🏷️ Versioning and Releases
 
-This repository uses **Semantic Versioning** for published snapshots:
+The first published snapshot is [`v0.1.0`](https://github.com/mahpatil/engineering-playbook/releases/tag/v0.1.0). Future snapshots use **Semantic Versioning**:
 
 - `MAJOR`: a reorganized or incompatible documentation structure
 - `MINOR`: a new standard, training module, or significant guidance area
@@ -116,7 +116,16 @@ change -> pull request -> quality gate -> merge to main
             GitHub release notes
 ```
 
-To publish a release, use the **Release** workflow with a version such as `v0.2.0`. The workflow verifies the tag format, creates the GitHub release, and generates release notes from merged pull requests. Keep notable changes grouped in the release description so readers can quickly see what changed.
+To publish a release after changes land on `main`, create and push a SemVer tag:
+
+```bash
+git checkout main
+git pull --ff-only
+git tag v0.2.0
+git push origin v0.2.0
+```
+
+Pushing a `v*` tag starts the **Release** workflow. The workflow accepts only `vMAJOR.MINOR.PATCH` tags, creates the GitHub release, and generates release notes from merged pull requests. There is no manual release step in GitHub Actions. Keep notable changes grouped in the release description and ensure the quality gate passes before tagging.
 
 ## 👥 For Technical Teams
 
