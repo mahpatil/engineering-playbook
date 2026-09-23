@@ -1,0 +1,34 @@
+name: Quality Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-readme:
+    name: Validate README
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Lint README
+        run: npx --yes markdownlint-cli2 README.md
+
+      - name: Check README links
+        uses: lycheeverse/lychee-action@v2.6.1
+        with:
+          args: --verbose --no-progress README.md
+          fail: true
+
+      - name: Check whitespace
+        run: git diff --check

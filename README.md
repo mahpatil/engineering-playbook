@@ -1,155 +1,165 @@
 # Engineering Standards & Practices Playbook
 
-> **Engineering North Star**: Production-grade patterns for modern cloud systems
+> **Production-grade thinking for modern cloud systems.**
+>
+> Architecture patterns, engineering standards, and practical tools for teams building systems that need to scale, recover, and earn trust.
 
-A comprehensive collection of technical standards, best practices, architecture blueprints, and production-ready code samples for building scalable, resilient, and secure cloud-native applications.
+<p align="left">
+  <img src="https://img.shields.io/github/stars/mahpatil/engineering-playbook?style=for-the-badge&logo=github&label=STARS&color=F4B400" alt="GitHub stars">
+  <a href="https://github.com/mahpatil/engineering-playbook/actions/workflows/validate.yml"><img src="https://img.shields.io/github/actions/workflow/status/mahpatil/engineering-playbook/validate.yml?style=for-the-badge&label=QUALITY%20GATE&color=2E7D32" alt="Quality gate status"></a>
+  <a href="https://github.com/mahpatil/engineering-playbook/releases"><img src="https://img.shields.io/github/v/release/mahpatil/engineering-playbook?style=for-the-badge&label=LATEST%20RELEASE&color=1565C0" alt="Latest release"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/mahpatil/engineering-playbook?style=for-the-badge&label=LICENSE&color=6A1B9A" alt="MIT license"></a>
+</p>
 
-## 📚 Table of Contents
+<p align="left">
+  <a href="#start-here">Start here</a> ·
+  <a href="#the-catalog">Browse the catalog</a> ·
+  <a href="#quality-gates">Quality gates</a> ·
+  <a href="#versioning-and-releases">Releases</a> ·
+  <a href="./CONTRIBUTING.md">Contribute</a>
+</p>
 
-1. [Overview](#overview)
-2. [Quick Start](#quick-start)
-3. [Standards Catalog](#standards-catalog)
-4. [For Technical Teams](#for-technical-teams)
-5. [For Non-Technical Stakeholders](#for-non-technical-stakeholders)
-6. [Contributing](#contributing)
-7. [License](#license)
+<a id="start-here"></a>
 
+## 🧭 Start Here
 
-## 🎯 Overview
+This is a living engineering reference for architects, engineers, platform teams, and technical leaders. It brings together the decisions and habits that make cloud-native systems resilient, observable, secure, and easier to evolve.
 
-This repository contains battle-tested technical standards and practices developed over 20 years of building production systems at scale (American Express, Apple, and Fortune 500 enterprises). Each standard includes:
+| You need to... | Go to... |
+|---|---|
+| Understand the principles behind the playbook | [Engineering principles](./PRINCIPLES.md) |
+| Choose an architecture approach | [Overall standards](./standards/overall/README.md) |
+| Design APIs, data, integrations, or networks | [Detailed standards](./standards/detailed/) |
+| Set up an AI-assisted workstation | [Developer tools](./tools/tools.md) |
+| Build reusable agent workflows | [Agent catalog](./agents/README.md) |
+| Learn the concepts step by step | [Training path](./training/README.md) |
 
-- **Architecture Blueprints**: Visual diagrams and system designs
-- **Implementation Code**: Production-ready code samples
-- **Non-Technical Guides**: Business-friendly explanations
-- **Multi-Cloud Examples**: AWS, Azure, and GCP implementations
-- **Tools**: Ready to use and adopt tools for your workstation
+## ✨ What You’ll Find
+
+- **Architecture blueprints** for scalable, resilient, and secure systems
+- **Implementation guidance** with practical patterns and examples
+- **Multi-cloud perspectives** across AWS, Azure, and GCP
+- **Executive-friendly context** covering cost, risk, outcomes, and metrics
+- **AI-native practices** for tools, hooks, agents, and human-in-the-loop delivery
 
 ## 🚀 Quick Start
+
 ```bash
-# Clone the repository
 git clone https://github.com/mahpatil/engineering-playbook.git
 cd engineering-playbook
 
-# Explore standards
-cd standards/overall
-cat README.md
+# Start with the principles and the overall standards index
+open PRINCIPLES.md
+open standards/overall/README.md
 ```
 
-## 📖 Catalog
+Prefer the command line? Replace `open` with `less`, `bat`, or your editor of choice.
 
+<a id="the-catalog"></a>
 
-| Standard | Maturity | Cloud Support | README |
-|----------|----------|---------------|--------|
-| [Overall north star](./standards/overall/) | ✅ Stable | Platform Agnostic Modern Architecture | [View](./standards/overall/README.md) |
-| [Microservices](./standards/detailed/microservices.md) | ✅ Stable | Platform Agnostic | [View](./standards/detailed/microservices.md)  |
-| [API Design](./standards/detailed/api-design.md) | 📋 Beta | Platform Agnostic | [View](./standards/detailed/api-design.md)  |
-| [Data Architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, GCP | [View](./standards/detailed/data/README.md) |
-| [Cloud Network Topology (Hub & Spoke, PCI, API Gateways)](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | AWS, Azure, GCP | [View](./standards/detailed/networking/cloud-network-topology.md) |
-| [Integration Patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Platform Agnostic | [View](./standards/detailed/integration/data-integration-patterns.md) |
-| [CI/CD Pipeline - DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | AWS, Azure, GCP | [View](./standards/detailed/cicd-pipeline.md) |
-| [Observability standards](./standards/detailed/observability/README.md) | 📋 Beta | Multi-cloud | [View](./standards/detailed/observability/README.md) |
-| High Availability - HA | 📋 Planned | AWS, Azure | Coming soon |
-| Scaling Patterns | 📋 Planned | AWS, Azure | Coming soon |
-| Disaster Recovery - DR | 📋 Planned | AWS, Azure | Coming soon |
-| [Tools](./tools/tools.md) | 📋 Beta | Tools to setup for engineers | [View](./tools/tools.md) |
-| [Claude Templates](./templates/) | 🚧 Beta | Claude Code | [View](./templates/README.md) |
-| [(dot)Claude Settings](./.claude) | 🚧 Beta | Claude Code | [View](./.claude/README.md) |
-| [AI Hooks](./.claude/hooks/) | ✅ Stable | Claude Code, OpenCode, Codex | [View](./tools/tools.md#-ai-hooks-installer) |
+## 📚 The Catalog
 
+| Standard | Maturity | Focus | Explore |
+|---|---|---|---|
+| [Overall north star](./standards/overall/) | ✅ Stable | Platform-agnostic architecture | [View](./standards/overall/README.md) |
+| [Microservices](./standards/detailed/microservices.md) | ✅ Stable | Service boundaries and operations | [View](./standards/detailed/microservices.md) |
+| [API design](./standards/detailed/api-design.md) | 📋 Beta | Contracts and interfaces | [View](./standards/detailed/api-design.md) |
+| [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP | [View](./standards/detailed/data/README.md) |
+| [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
+| [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
+| [CI/CD and DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
+| [Observability](./standards/detailed/observability/README.md) | 📋 Beta | Logs, metrics, traces, SLOs | [View](./standards/detailed/observability/README.md) |
+| [Developer tools](./tools/tools.md) | 📋 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
+| [Agent catalog](./agents/README.md) | 🚧 Beta | Reusable engineering agents | [View](./agents/README.md) |
+| [Claude templates](./templates/) | 🚧 Beta | AI-assisted delivery | [View](./templates/README.md) |
 
-## 👨‍💻 For Technical Teams
+<a id="quality-gates"></a>
+
+## 🛡️ Quality Gates
+
+Every pull request should leave the playbook more trustworthy than it found it. The repository quality gate checks:
+
+1. **Markdown style** with `markdownlint-cli2`
+2. **Internal and external links** with `lychee`
+3. **Whitespace and patch hygiene** with `git diff --check`
+4. **Review completeness** against the [contribution checklist](./CONTRIBUTING.md)
+
+Run the same checks locally before opening a pull request:
+
+```bash
+npx --yes markdownlint-cli2 "**/*.md" "#node_modules"
+npx --yes markdown-link-check README.md
+git diff --check
+```
+
+The GitHub Actions quality gate runs on pushes and pull requests. A change is ready to merge when the checks pass and the relevant standard has been reviewed for technical accuracy, examples, and links.
+
+<a id="versioning-and-releases"></a>
+
+## 🏷️ Versioning and Releases
+
+This repository uses **Semantic Versioning** for published snapshots:
+
+- `MAJOR`: a reorganized or incompatible documentation structure
+- `MINOR`: a new standard, training module, or significant guidance area
+- `PATCH`: corrections, clarifications, examples, and link fixes
+
+Release flow:
+
+```text
+change -> pull request -> quality gate -> merge to main
+              |
+              v
+          tag vMAJOR.MINOR.PATCH
+              |
+              v
+            GitHub release notes
+```
+
+To publish a release, use the **Release** workflow with a version such as `v0.2.0`. The workflow verifies the tag format, creates the GitHub release, and generates release notes from merged pull requests. Keep notable changes grouped in the release description so readers can quickly see what changed.
+
+## 👥 For Technical Teams
 
 ### Engineers
 
-Each standard includes production-ready code samples:
-```python
-# Example: Event-driven architecture
-from events.producer import EventProducer
+Use the standards as a design review companion: start with the relevant principle, compare the available patterns, then adapt the examples to your runtime and cloud boundary.
 
-producer = EventProducer()
-producer.publish_event(
-    topic='orders',
-    event_type='com.example.orders.created',
-    data={'order_id': '12345', 'amount': 99.99}
-)
-```
+### Platform and SRE teams
 
-### DevOps/SRE
+Use the networking, DevSecOps, CI/CD, high-availability, scaling, disaster-recovery, and observability material to turn operational expectations into repeatable controls.
 
-Terraform modules, Kubernetes manifests, and CI/CD pipelines:
-```terraform
-# Example: Multi-AZ high availability setup
-module "ha_infrastructure" {
-  source = "./standards/high-availability/terraform/<provider>"
-  
-  region_primary   = "us-east-1"
-  region_secondary = "us-west-2"
-  rto_minutes      = 60
-  rpo_seconds      = 5
-}
-```
+### Architects and technical leaders
 
-### Architects
-
-Architecture decision records (ADRs) and design patterns:
-
-- When to use Event-Driven Architecture (coming soon)
-- Multi-Cloud Strategy (coming soon)
+Use the decision frameworks, metrics, ADR guidance, and executive summaries to make tradeoffs explicit and durable.
 
 ## 💼 For Non-Technical Stakeholders
 
-Each technical standard includes a **business-friendly explanation**:
-
-- **What it is**: Plain English explanation
-- **Why it matters**: Business impact (revenue, customer satisfaction, compliance)
-- **Cost & ROI**: Investment requirements and returns
-- **Risks**: What happens if we don't do this
-- **Metrics**: How we measure success
-
-Example: High Availability for Executives (coming soon)
+The playbook connects technical choices to business outcomes: customer experience, resilience, compliance, cost, delivery speed, and measurable risk reduction.
 
 ## 🤝 Contributing
 
-We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+1. Fork the repository and create a focused feature branch.
+2. Add or update the relevant standard, example, or training material.
+3. Run the [quality checks](#quality-gates) locally.
+4. Update links, maturity status, and release notes when appropriate.
+5. Open a pull request using a clear, outcome-oriented description.
 
-### How to Contribute
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/new-standard`)
-3. **Follow** the standard template (coming soon)
-4. **Submit** a pull request
-
-
-**Your input helps make these standards better for everyone.**
-
-### Standard Quality Checklist
-
-- [ ] Architecture blueprint included
-- [ ] Production-ready code samples
-- [ ] Multi-cloud examples (if applicable)
-- [ ] Non-technical stakeholder guide
-- [ ] Automated tests
-- [ ] Documentation complete
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full contribution and review guidelines.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License. See [LICENSE](./LICENSE) for details.
 
 ## 🙏 Acknowledgments
 
-Built on lessons learned from:
-- 20+ years of production systems in regulated industries such as finance services, healthcare, insurance, and enterprise environments
-- Open source projects: Kubernetes, Kafka, Prometheus, OpenTelemetry
-- Industry standards: OWASP, DORA, CNCF, CloudEvents
-- Cloud platforms: AWS, Azure, GCP
+Built from lessons learned in regulated finance, healthcare, insurance, and enterprise environments, and informed by Kubernetes, Kafka, Prometheus, OpenTelemetry, OWASP, DORA, CNCF, CloudEvents, AWS, Azure, and GCP.
 
 ## 📞 Contact
 
-- **Maintainer**: Mahesh Patil
-- **Email**: [mahesh@wonoments.com]
-- **LinkedIn**: [linkedin.com/in/inspiredbytech](https://linkedin.com/in/inspiredbytech)
+- **Maintainer:** Mahesh Patil
+- **Email:** [mahesh@wonoments.com](mailto:mahesh@wonoments.com)
+- **LinkedIn:** [linkedin.com/in/inspiredbytech](https://linkedin.com/in/inspiredbytech)
 
 ---
-
-**Star ⭐ this repository if you find it helpful!**
+⭐ If this playbook helps your team make a better engineering decision, star the repository and share the standard that helped.
+<!-- End of README -->
