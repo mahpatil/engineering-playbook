@@ -1,0 +1,57 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: {{APP_NAME}}
+  namespace: {{NAMESPACE}}
+  labels:
+    app.kubernetes.io/name: {{APP_NAME}}
+    environment: {{ENVIRONMENT}}
+spec:
+  interval: 5m
+  url: "{{GITOPS_REPO_URL}}"
+  ref:
+    branch: "{{BRANCH}}"
+  ignore: |
+    /*
+    !/{{CHART_PATH}}
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: {{APP_NAME}}-{{ENVIRONMENT}}
+  namespace: {{NAMESPACE}}
+  labels:
+    app.kubernetes.io/name: {{APP_NAME}}
+    app.kubernetes.io/instance: {{APP_NAME}}-{{ENVIRONMENT}}
+    app.kubernetes.io/managed-by: flux
+    environment: {{ENVIRONMENT}}
+spec:
+  interval: 5m
+  targetNamespace: {{NAMESPACE}}
+  chart:
+    spec:
+      chart: "{{CHART_PATH}}"
+      sourceRef:
+        kind: GitRepository
+        name: {{APP_NAME}}
+        namespace: {{NAMESPACE}}
+      interval: 5m
+      valuesFiles:
+        - values.yaml
+        - values-{{ENVIRONMENT}}.yaml
+  install:
+    crds: CreateReplace
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+  rollback:
+    enable: true
+    recreate: true
+    force: true
+  timeout: 10m

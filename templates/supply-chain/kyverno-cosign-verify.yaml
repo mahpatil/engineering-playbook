@@ -1,0 +1,61 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: check-image-signatures-and-provenance
+  annotations:
+    policies.kyverno.io/title: Verify Image Signatures and SLSA Provenance
+    policies.kyverno.io/category: Supply Chain Security
+    policies.kyverno.io/severity: high
+    policies.kyverno.io/subject: Pod, Deployment, Rollout
+    policies.kyverno.io/minversion: 1.10.0
+    policies.kyverno.io/description: >-
+      Enforces cryptographic Sigstore Cosign image signatures and SLSA v1.0
+      provenance attestations using keyless GitHub Actions OIDC identities
+      for workloads deployed across protected namespaces.
+spec:
+  validationFailureAction: Enforce
+  webhookTimeoutSeconds: 30
+  rules:
+    - name: verify-signature-and-provenance
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+                - Deployment
+                - Rollout
+                - argoproj.io/v1alpha1/Rollout
+              namespaces:
+                - production
+                - staging
+                - "{{PROTECTED_NAMESPACE}}"
+      verifyImages:
+        - imageReferences:
+            - "ghcr.io/{{GITHUB_ORG}}/*"
+            - "{{IMAGE_REGISTRY}}/{{GITHUB_ORG}}/*"
+          mutateDigest: true
+          verifyDigest: true
+          required: true
+          attestors:
+            - count: 1
+              entries:
+                - keyless:
+                    issuer: https://token.actions.githubusercontent.com
+                    subject: https://github.com/{{GITHUB_ORG}}/*
+                    rekor:
+                      url: https://rekor.sigstore.dev
+          attestations:
+            - predicateType: https://slsa.dev/provenance/v1
+              attestors:
+                - count: 1
+                  entries:
+                    - keyless:
+                        issuer: https://token.actions.githubusercontent.com
+                        subject: https://github.com/{{GITHUB_ORG}}/*
+                        rekor:
+                          url: https://rekor.sigstore.dev
+              conditions:
+                - all:
+                    - key: "{{ builder.id }}"
+                      operator: Equals
+                      value: "https://github.com/{{GITHUB_ORG}}/*"

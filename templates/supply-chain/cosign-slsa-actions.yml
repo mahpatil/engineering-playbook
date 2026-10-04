@@ -1,0 +1,150 @@
+name: Build, Sign, and SLSA Provenance
+
+on:
+  workflow_call:
+    inputs:
+      image-name:
+        description: 'Target container image name (e.g., ghcr.io/my-org/my-service)'
+        required: true
+        type: string
+      image-tag:
+        description: 'Container image tag (default: commit SHA)'
+        required: false
+        type: string
+        default: ${{ github.sha }}
+      dockerfile:
+        description: 'Path to Dockerfile'
+        required: false
+        type: string
+        default: 'Dockerfile'
+      context:
+        description: 'Docker build context path'
+        required: false
+        type: string
+        default: '.'
+      registry:
+        description: 'Container registry hostname'
+        required: false
+        type: string
+        default: 'ghcr.io'
+    outputs:
+      image-digest:
+        description: 'Immutable SHA256 image digest'
+        value: ${{ jobs.build-sign-attest.outputs.image-digest }}
+      image-uri:
+        description: 'Fully qualified immutable image reference with digest'
+        value: ${{ jobs.build-sign-attest.outputs.image-uri }}
+
+permissions:
+  id-token: write
+  contents: read
+  packages: write
+
+jobs:
+  build-sign-attest:
+    name: Build, Sign, and Attest Image
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      packages: write
+    outputs:
+      image-digest: ${{ steps.digest.outputs.digest }}
+      image-uri: ${{ steps.digest.outputs.image-uri }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.8.1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push container image
+        id: build-push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
+          push: true
+          tags: ${{ inputs.image-name }}:${{ inputs.image-tag }}
+
+      - name: Extract image digest
+        id: digest
+        run: |
+          DIGEST="${{ steps.build-push.outputs.digest }}"
+          IMAGE_URI="${{ inputs.image-name }}@${DIGEST}"
+          echo "digest=${DIGEST}" >> "$GITHUB_OUTPUT"
+          echo "image-uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
+          echo "Target image URI: ${IMAGE_URI}"
+
+      - name: Sign container image with Cosign (Keyless OIDC)
+        env:
+          IMAGE_URI: ${{ steps.digest.outputs.image-uri }}
+        run: |
+          echo "Signing ${IMAGE_URI} via Sigstore keyless OIDC..."
+          cosign sign --yes "${IMAGE_URI}"
+
+      - name: Generate and attest SLSA Level 3 provenance
+        env:
+          IMAGE_URI: ${{ steps.digest.outputs.image-uri }}
+          DIGEST: ${{ steps.digest.outputs.digest }}
+          IMAGE_NAME: ${{ inputs.image-name }}
+        run: |
+          echo "Constructing SLSA v1.0 provenance predicate for ${IMAGE_URI}..."
+          BUILD_TIME="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+          cat <<EOF > predicate.json
+          {
+            "buildDefinition": {
+              "buildType": "https://actions.github.com/workflow/v1",
+              "externalParameters": {
+                "workflow": {
+                  "repository": "https://github.com/${{ github.repository }}",
+                  "path": "${{ github.workflow_ref }}",
+                  "ref": "${{ github.ref }}"
+                }
+              },
+              "internalParameters": {
+                "github": {
+                  "event_name": "${{ github.event_name }}",
+                  "repository": "${{ github.repository }}",
+                  "sha": "${{ github.sha }}",
+                  "run_id": "${{ github.run_id }}",
+                  "run_attempt": "${{ github.run_attempt }}"
+                }
+              },
+              "resolvedDependencies": [
+                {
+                  "uri": "git+https://github.com/${{ github.repository }}@${{ github.sha }}",
+                  "digest": {
+                    "gitCommit": "${{ github.sha }}"
+                  }
+                }
+              ]
+            },
+            "runDetails": {
+              "builder": {
+                "id": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              },
+              "metadata": {
+                "invocationId": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                "startedOn": "${BUILD_TIME}"
+              }
+            }
+          }
+          EOF
+
+          echo "Attesting SLSA provenance via Cosign keyless OIDC..."
+          cosign attest --yes \
+            --predicate predicate.json \
+            --type https://slsa.dev/provenance/v1 \
+            "${IMAGE_URI}"

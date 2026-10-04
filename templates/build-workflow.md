@@ -1,5 +1,7 @@
 <!-- build-workflow.md -->
+
 # Claude Code + Context OS Workflow (macOS, Java + TypeScript, VS Code, Ghostty)
+
 This is an efficient workflow to use terminal, IDE and claude code together. This document describes a practical setup to recreate the workflow:
 
 - macOS
