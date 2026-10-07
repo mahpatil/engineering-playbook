@@ -52,4 +52,4 @@ Profile before optimizing. Avoid N+1 queries and verify plans with `EXPLAIN ANAL
 Classify data as Public, Internal, Confidential or Restricted. Restricted (PII, PCI, PHI) needs explicit approval, immutable audit logs of access and mutation, implemented (not just documented) retention, and GDPR/CCPA deletion and export from the start.
 
 ## Related
-`api/`, `frontend/`, `infra/`, `backend/{java,dotnet,python,rust}/` CLAUDE.md files. `standards/overall/principles.md` and `tech-stack.md` for architecture and approved technology.
+`ai/` (agent usage and LLM features), `api/`, `frontend/`, `infra/`, `backend/{java,dotnet,python,rust}/` CLAUDE.md files. `standards/overall/principles.md` and `tech-stack.md` for architecture and approved technology.
