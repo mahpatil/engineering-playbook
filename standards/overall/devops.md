@@ -184,14 +184,19 @@ spec:
 ```
 
 ### Rollback Triggers
+
 - Error rate > 5% for 2 minutes
 - Latency p99 > 2x baseline
 - Circuit breaker open
 - Health check failures
 
+> **Note**: For production canary traffic shifting, automated metric analysis (P99 latency, HTTP 5xx error rate thresholds), and instant rollback mechanisms, see the detailed [Progressive Delivery Standard](../detailed/release-engineering/progressive-delivery.md).
+
 ---
 
 ## GitOps
+
+> **Note**: For comprehensive multi-repository GitOps topology, environment promotion pipelines, drift detection, and automated self-healing specifications, see the detailed [GitOps Promotion Standards](../detailed/release-engineering/gitops-promotions.md).
 
 ### ArgoCD Application
 ```yaml
@@ -301,14 +306,19 @@ Automated from conventional commits:
 ```
 
 ### Release Process
-1. Merge to main triggers build
-2. Automated tests and security scans
-3. Build versioned, immutable artifact
-4. Deploy to non-production
-5. Run E2E tests
-6. Manual approval for production
-7. Progressive rollout to production
-8. Automated rollback if metrics degrade
+
+1. Merge to main triggers build and test execution
+2. Automated security scanning and Cosign image signing with SLSA Level 3 attestations
+3. Build and push immutable container artifact tagged with git SHA
+4. Pre-promotion static manifest validation via `deployment-validator --mode=static`
+5. Pull-based deployment to non-production environment via GitOps
+6. Execute automated integration and end-to-end test suites
+7. Pre-upgrade database migrations executed via isolated Kubernetes Jobs
+8. Manual approval gate for production promotion pull request
+9. Progressive rollout to production (canary / blue-green) with real-time metric analysis
+10. Automated rollback if telemetry triggers breach thresholds
+
+> **Note**: For complete progressive delivery, GitOps promotions, database migrations, and supply chain security specifications, see [Release Engineering & Progressive Delivery Standards](../detailed/release-engineering/README.md).
 
 ---
 
