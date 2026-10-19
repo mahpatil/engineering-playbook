@@ -252,7 +252,7 @@ Run the checks locally: `python3 tools/contrib-check/check.py --base origin/main
 
 - **General questions**: Open a [discussion](https://github.com/mahpatil/engineering-playbook/discussions)
 - **Bug reports**: Open an [issue](https://github.com/mahpatil/engineering-playbook/issues)
-- **Security issues**: Email security@your-org.com
+- **Security issues**: Email <security@your-org.com>
 
 ## License
 
