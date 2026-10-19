@@ -1,0 +1,10 @@
+# Filler phrases that signal unreviewed generated text. One per line, case-insensitive.
+delve
+tapestry
+in today's fast-paced
+it's important to note
+it is important to note
+as an ai
+seamlessly
+game-changer
+unlock the power

@@ -1,0 +1,12 @@
+# Tools that must be presented as examples, not defaults (Kubernetes, Terraform, GitHub are exempt).
+Argo
+Flagger
+Helm
+Kustomize
+Flyway
+Liquibase
+Prometheus
+Grafana
+Jenkins
+Istio
+Datadog

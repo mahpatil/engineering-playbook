@@ -187,5 +187,92 @@ class SlopPhrases(unittest.TestCase):
         self.assertEqual(check.check_slop("a.md", "# T\n\nship it \U0001F680\n", []), [])
 
 
+TOOLS = ["Argo", "Flyway"]
+
+
+class PrincipleFirst(unittest.TestCase):
+    def test_principles_before_tools_passes(self):
+        doc = "# T\n\n## Principles\n\n1. Be neutral.\n\n## Tooling\n\nUse Argo.\n"
+        self.assertEqual(check.check_principle_first("a.md", doc, TOOLS), [])
+
+    def test_missing_principles_heading_warns(self):
+        f = check.check_principle_first("a.md", "# T\n\n## Design\n\ntext\n", TOOLS)
+        self.assertEqual([(x.std, x.severity) for x in f], [("S1", "warn")])
+
+    def test_tool_in_heading_warns(self):
+        doc = "# T\n\n## Principles\n\nx\n\n## Argo setup\n\ntext\n"
+        self.assertEqual(len(check.check_principle_first("a.md", doc, TOOLS)), 1)
+
+    def test_tool_before_principles_warns(self):
+        doc = "# T\n\nWe use Argo here.\n\n## Principles\n\nx\n"
+        self.assertEqual(len(check.check_principle_first("a.md", doc, TOOLS)), 1)
+
+
+class ToolDefaults(unittest.TestCase):
+    def test_swap_signal_passes(self):
+        doc = "Use a rollout controller, e.g. Argo Rollouts, or equivalent.\n"
+        self.assertEqual(check.check_tool_defaults("a.md", doc, TOOLS), [])
+
+    def test_bare_tool_warns_once_per_tool(self):
+        doc = "We deploy with Argo.\n\nArgo syncs state.\n"
+        f = check.check_tool_defaults("a.md", doc, TOOLS)
+        self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S2", "warn", 1)])
+
+    def test_tool_inside_code_fence_ignored(self):
+        doc = "```bash\nargo sync\nflyway migrate\n```\n"
+        self.assertEqual(check.check_tool_defaults("a.md", doc, TOOLS), [])
+
+
+class AlternativesSignal(unittest.TestCase):
+    def test_recommend_without_alternatives_warns(self):
+        f = check.check_alternatives("a.md", "We recommend GitOps.\n")
+        self.assertEqual([(x.std, x.severity) for x in f], [("S3", "warn")])
+
+    def test_recommend_with_alternatives_ok(self):
+        self.assertEqual(check.check_alternatives("a.md", "We recommend A.\n\n## When to use B\n"), [])
+
+    def test_no_recommendation_ok(self):
+        self.assertEqual(check.check_alternatives("a.md", "Plain text.\n"), [])
+
+
+class FitsContext(unittest.TestCase):
+    EXISTS = staticmethod(lambda p: p in {"standards/b.md", "standards/c.md", "standards/a.md"})
+
+    def test_links_and_related_heading_ok(self):
+        doc = "## Related standards\n\n[b](b.md) [c](./c.md)\n"
+        self.assertEqual(check.check_fits_context("standards/a.md", doc, self.EXISTS), [])
+
+    def test_too_few_links_warns(self):
+        doc = "## Related standards\n\n[b](b.md)\n"
+        f = check.check_fits_context("standards/a.md", doc, self.EXISTS)
+        self.assertEqual([(x.std, x.severity) for x in f], [("S7", "warn")])
+
+    def test_broken_and_self_links_do_not_count(self):
+        doc = "## Related\n\n[x](missing.md) [s](a.md) [b](b.md)\n"
+        self.assertEqual(len(check.check_fits_context("standards/a.md", doc, self.EXISTS)), 1)
+
+    def test_no_relationship_text_warns(self):
+        doc = "[b](b.md) [c](c.md)\n"
+        self.assertEqual(len(check.check_fits_context("standards/a.md", doc, self.EXISTS)), 1)
+
+
+class UnsupportedClaims(unittest.TestCase):
+    def test_bare_number_warns(self):
+        f = check.check_claims("a.md", "Tokens must expire within 15 minutes.\n")
+        self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S9", "warn", 1)])
+
+    def test_rationale_in_paragraph_ok(self):
+        doc = "Tokens expire within 15 minutes because a leaked token is then short-lived.\n"
+        self.assertEqual(check.check_claims("a.md", doc), [])
+
+    def test_link_in_paragraph_ok(self):
+        doc = "Use p99 under 500ms ([source](https://example.com)).\n"
+        self.assertEqual(check.check_claims("a.md", doc), [])
+
+    def test_code_and_tables_ignored(self):
+        doc = "```yaml\nttl: 900s\n```\n\n| a | 99.9% |\n"
+        self.assertEqual(check.check_claims("a.md", doc), [])
+
+
 if __name__ == "__main__":
     unittest.main()

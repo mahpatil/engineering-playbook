@@ -2,6 +2,7 @@
 """Deterministic contribution checks. No LLM, stdlib only. See CONTRIBUTING.md."""
 import ast
 import json
+import posixpath
 import re
 import textwrap
 from dataclasses import dataclass
@@ -16,6 +17,14 @@ CONFIG_LANGS = {"yaml", "yml", "hcl", "terraform", "tf", "json", "dockerfile"}
 PLACEHOLDER_RE = re.compile(r"\b(TODO|FIXME|lorem ipsum|placeholder|test comment|your-org)\b", re.I)
 EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF\u2600-\u27BF]")
 SELF_CALL_RE = re.compile(r"\bself\.(\w+)\(")
+SWAP_RE = re.compile(r"e\.g\.|such as|or equivalent|alternative|swap|for example|for instance|\blike\b", re.I)
+ALT_RE = re.compile(r"alternative|when to use|trade-?offs?|trade off", re.I)
+RECOMMEND_RE = re.compile(r"\brecommend|\bdefault\b", re.I)
+RELATED_RE = re.compile(r"related|how this fits|relationship to|\bvs\.?\b|compared (to|with)|complements", re.I)
+LINK_RE = re.compile(r"\]\((?!https?:)([^)#\s]+\.md)")
+CLAIM_RE = re.compile(r"\b\d+(\.\d+)?\s?(%|ms\b|seconds?\b|minutes?\b|hours?\b|days?\b|MB\b|GB\b)|\bv\d+\.\d+")
+SUPPORT_RE = re.compile(r"\]\(https?:|because|so that|rationale|since |to avoid|which means", re.I)
+MIN_RELATED_LINKS = 2
 PR_SECTIONS = ("What changed", "How tested", "What could go wrong")
 
 
@@ -162,4 +171,80 @@ def check_slop(path, text, terms):
         out += [Finding(path, no, "S5", WARN, f"slop phrase '{t}'") for t in terms if t.lower() in low]
         if ln.startswith("#") and EMOJI_RE.search(ln):
             out.append(Finding(path, no, "S5", WARN, "emoji in heading"))
+    return out
+
+
+def _tool_re(tools):
+    return re.compile(r"\b(" + "|".join(re.escape(t) for t in tools) + r")\b", re.I) if tools else None
+
+
+def check_principle_first(path, text, tools):
+    lines = list(prose_lines(text))
+    principle = next((no for no, ln in lines if re.match(r"#{2,3}\s.*principle", ln, re.I)), None)
+    tool_re = _tool_re(tools)
+    out = []
+    if principle is None:
+        out.append(Finding(path, 1, "S1", WARN, "no 'Principles' heading: state the principle before the tool"))
+    if tool_re:
+        for no, ln in lines:
+            if re.match(r"#{1,2}\s", ln) and tool_re.search(ln):
+                out.append(Finding(path, no, "S1", WARN, "tool named in a top-level heading; lead with the principle"))
+            elif principle and no < principle and not ln.startswith("#") and tool_re.search(ln):
+                out.append(Finding(path, no, "S1", WARN, "tool named before the Principles section"))
+                break
+    return out
+
+
+def _paragraphs(text):
+    """Yield (first_line_no, paragraph_text) for prose outside code fences."""
+    start, buf = None, []
+    for no, ln in prose_lines(text):
+        if ln.strip():
+            start = start or no
+            buf.append(ln)
+        elif buf:
+            yield start, "\n".join(buf)
+            start, buf = None, []
+    if buf:
+        yield start, "\n".join(buf)
+
+
+def check_tool_defaults(path, text, tools):
+    tool_re = _tool_re(tools)
+    if not tool_re:
+        return []
+    out, seen = [], set()
+    for start, para in _paragraphs(text):
+        for m in tool_re.finditer(para):
+            name = m.group(1).lower()
+            if name not in seen and not SWAP_RE.search(para):
+                seen.add(name)
+                out.append(Finding(path, start, "S2", WARN,
+                                   f"'{m.group(1)}' reads as a default; frame it as an example (e.g., 'such as')"))
+    return out
+
+
+def check_alternatives(path, text):
+    if RECOMMEND_RE.search(text) and not ALT_RE.search(text):
+        return [Finding(path, 1, "S3", WARN, "recommends an approach but never covers alternatives or when to use them")]
+    return []
+
+
+def check_fits_context(path, text, exists):
+    base = posixpath.dirname(path)
+    targets = {posixpath.normpath(posixpath.join(base, link)) for link in LINK_RE.findall(text)}
+    targets = {t for t in targets if t != path and t.startswith("standards/") and exists(t)}
+    if len(targets) >= MIN_RELATED_LINKS and RELATED_RE.search(text):
+        return []
+    return [Finding(path, 1, "S7", WARN,
+                    f"link >= {MIN_RELATED_LINKS} related standards and say how this fits (Related / vs / relationship)")]
+
+
+def check_claims(path, text):
+    out = []
+    for start, para in _paragraphs(text):
+        if para.lstrip().startswith("|") or para.startswith("#"):
+            continue
+        if CLAIM_RE.search(para) and not SUPPORT_RE.search(para):
+            out.append(Finding(path, start, "S9", WARN, "number/version claim without a rationale or source"))
     return out
