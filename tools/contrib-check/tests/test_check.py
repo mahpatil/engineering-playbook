@@ -274,5 +274,88 @@ class UnsupportedClaims(unittest.TestCase):
         self.assertEqual(check.check_claims("a.md", doc), [])
 
 
+class PrSize(unittest.TestCase):
+    def test_docs_are_exempt(self):
+        stat = [("standards/a.md", 900), ("docs/specs/x.html", 600), ("docs/y.txt", 700)]
+        self.assertEqual(stds(check.check_pr_size(stat), severity="error"), [])
+
+    def test_code_boundary(self):
+        self.assertEqual(check.check_pr_size([("tools/a.py", 500)]), [])
+        f = check.check_pr_size([("tools/a.py", 300), ("tools/b.sh", 201)])
+        self.assertEqual([(x.std, x.severity) for x in f], [("S6", "error")])
+
+    def test_large_single_doc_warns(self):
+        f = check.check_pr_size([("standards/a.md", 401)])
+        self.assertEqual([(x.std, x.severity) for x in f], [("S6", "warn")])
+        self.assertEqual(check.check_pr_size([("standards/a.md", 400)]), [])
+
+
+class Pragmas(unittest.TestCase):
+    def test_parse_ignores(self):
+        text = "<!-- contrib-check: ignore S5 -->\n<!-- contrib-check: ignore S2, S9 -->\n"
+        self.assertEqual(check.parse_ignores(text), {"S5", "S2", "S9"})
+
+    def test_apply_suppresses_only_listed(self):
+        fs = [check.Finding("a", 1, "S5", "error", "m"), check.Finding("a", 1, "S4", "error", "m")]
+        kept = check.apply_ignores(fs, {"S5"})
+        self.assertEqual([f.std for f in kept], ["S4"])
+
+
+class Orchestration(unittest.TestCase):
+    CTX = check.Context(readme="", tools=TOOLS, slop=["delve"], exists=lambda p: False)
+
+    def test_exempt_paths_skipped(self):
+        self.assertEqual(check.check_file("templates/x.md", "TODO", self.CTX, is_new=True), [])
+        self.assertEqual(check.check_file("references/x.md", "TODO", self.CTX, is_new=True), [])
+
+    def test_non_standards_files_skipped(self):
+        self.assertEqual(check.check_file("CONTRIBUTING.md", "TODO", self.CTX, is_new=True), [])
+
+    def test_standards_doc_runs_checks(self):
+        found = {f.std for f in check.check_file("standards/a.md", "# T\n\nTODO\n", self.CTX, is_new=True)}
+        self.assertTrue({"S4", "S5", "S8"} <= found)
+
+    def test_readme_check_only_for_new_files(self):
+        found = {f.std for f in check.check_file("standards/a.md", GOOD_DOC, self.CTX, is_new=False)}
+        self.assertNotIn("S8", found)
+
+    def test_pragma_suppresses(self):
+        text = "<!-- contrib-check: ignore S5 -->\n# T\n\nTODO\n"
+        found = {f.std for f in check.check_file("standards/a.md", text, self.CTX, is_new=False)}
+        self.assertNotIn("S5", found)
+
+
+class Report(unittest.TestCase):
+    def test_warnings_only_exit_zero(self):
+        code, lines = check.report([check.Finding("a.md", 3, "S2", "warn", "msg")])
+        self.assertEqual(code, 0)
+        self.assertEqual(lines[0], "::warning file=a.md,line=3::[S2] msg")
+
+    def test_error_exit_one(self):
+        code, lines = check.report([check.Finding("a.md", 1, "S4", "error", "msg")])
+        self.assertEqual(code, 1)
+        self.assertTrue(lines[0].startswith("::error file=a.md,line=1::[S4]"))
+
+    def test_ignored_listed_in_summary(self):
+        code, lines = check.report([], ignored={"a.md": {"S5"}})
+        self.assertEqual(code, 0)
+        self.assertTrue(any("a.md" in ln and "S5" in ln for ln in lines))
+
+    def test_clean_message(self):
+        self.assertEqual(check.report([])[0], 0)
+
+
+class RegressionOnRealDocs(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[3]
+
+    def test_logs_doc_has_no_errors(self):
+        path = self.ROOT / "standards/detailed/observability/logs.md"
+        if not path.exists():
+            self.skipTest("logs.md not present")
+        ctx = check.Context(readme=(self.ROOT / "README.md").read_text(), tools=[], slop=[], exists=lambda p: True)
+        found = check.check_file("standards/detailed/observability/logs.md", path.read_text(), ctx, is_new=False)
+        self.assertEqual(stds(found, severity="error"), [])
+
+
 if __name__ == "__main__":
     unittest.main()

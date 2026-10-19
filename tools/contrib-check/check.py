@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
 """Deterministic contribution checks. No LLM, stdlib only. See CONTRIBUTING.md."""
+import argparse
 import ast
 import json
+import os
 import posixpath
 import re
+import subprocess
+import sys
 import textwrap
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable
 
 ERROR, WARN = "error", "warn"
 OPENER_WINDOW = 40
@@ -25,6 +31,13 @@ LINK_RE = re.compile(r"\]\((?!https?:)([^)#\s]+\.md)")
 CLAIM_RE = re.compile(r"\b\d+(\.\d+)?\s?(%|ms\b|seconds?\b|minutes?\b|hours?\b|days?\b|MB\b|GB\b)|\bv\d+\.\d+")
 SUPPORT_RE = re.compile(r"\]\(https?:|because|so that|rationale|since |to avoid|which means", re.I)
 MIN_RELATED_LINKS = 2
+CODE_CAP = 500
+DOC_WARN_LINES = 400
+DOC_SUFFIXES = (".md", ".html")
+DOC_DIRS = ("docs/", "specs/")
+EXEMPT_DIRS = ("templates/", "references/")
+IGNORE_RE = re.compile(r"<!--\s*contrib-check:\s*ignore\s+([^>]*?)\s*-->", re.I)
+HERE = Path(__file__).resolve().parent
 PR_SECTIONS = ("What changed", "How tested", "What could go wrong")
 
 
@@ -248,3 +261,109 @@ def check_claims(path, text):
         if CLAIM_RE.search(para) and not SUPPORT_RE.search(para):
             out.append(Finding(path, start, "S9", WARN, "number/version claim without a rationale or source"))
     return out
+
+
+def _is_doc(path):
+    return path.endswith(DOC_SUFFIXES) or path.startswith(DOC_DIRS)
+
+
+def check_pr_size(numstat):
+    out = []
+    code = sum(n for p, n in numstat if not _is_doc(p))
+    if code > CODE_CAP:
+        out.append(Finding("PR", 1, "S6", ERROR, f"{code} code lines added (cap {CODE_CAP}); split into slices"))
+    out += [Finding(p, 1, "S6", WARN, f"{n} lines added to one doc; keep additions high-level")
+            for p, n in numstat if p.endswith(".md") and n > DOC_WARN_LINES]
+    return out
+
+
+def parse_ignores(text):
+    return {t.strip().upper() for m in IGNORE_RE.finditer(text) for t in m.group(1).split(",") if t.strip()}
+
+
+def apply_ignores(findings, ignores):
+    return [f for f in findings if f.std not in ignores]
+
+
+@dataclass
+class Context:
+    readme: str
+    tools: list
+    slop: list
+    exists: Callable[[str], bool]
+
+
+def check_file(path, text, ctx, is_new):
+    if path.startswith(EXEMPT_DIRS) or not (path.startswith("standards/") and path.endswith(".md")):
+        return []
+    found = (check_purpose_opener(path, text) + check_snippet_limits(path, text)
+             + check_placeholders(path, text) + check_snippet_syntax(path, text)
+             + check_slop(path, text, ctx.slop) + check_principle_first(path, text, ctx.tools)
+             + check_tool_defaults(path, text, ctx.tools) + check_alternatives(path, text)
+             + check_fits_context(path, text, ctx.exists) + check_claims(path, text))
+    if is_new:
+        found += check_readme_indexed(path, ctx.readme)
+    return apply_ignores(found, parse_ignores(text))
+
+
+def report(findings, ignored=None):
+    lines = [f"::{'error' if f.severity == ERROR else 'warning'} file={f.path},line={f.line}::[{f.std}] {f.message}"
+             for f in findings]
+    lines += [f"suppressed in {p}: {', '.join(sorted(stds))}" for p, stds in (ignored or {}).items() if stds]
+    errors = sum(f.severity == ERROR for f in findings)
+    warns = len(findings) - errors
+    lines.append(f"contrib-check: {errors} error(s), {warns} warning(s)")
+    return (1 if errors else 0), lines
+
+
+def _load_terms(name):
+    f = HERE / name
+    return [ln.strip() for ln in f.read_text().splitlines() if ln.strip() and not ln.startswith("#")]
+
+
+def _git(*args):
+    return subprocess.run(["git", *args], capture_output=True, text=True, check=True).stdout
+
+
+def _changed(base):
+    """Return ({path: is_new}, [(path, added_lines)]) for the PR diff against base."""
+    status = {}
+    for ln in _git("diff", "--name-status", "--diff-filter=AM", f"{base}...HEAD").splitlines():
+        code, path = ln.split("\t", 1)
+        status[path] = code == "A"
+    numstat = []
+    for ln in _git("diff", "--numstat", f"{base}...HEAD").splitlines():
+        added, _, path = ln.split("\t", 2)
+        numstat.append((path, int(added) if added.isdigit() else 0))
+    return status, numstat
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--base", default="origin/main")
+    ap.add_argument("--files", nargs="*")
+    ap.add_argument("--pr-body-file")
+    args = ap.parse_args(argv)
+    if args.files is not None:
+        status, numstat = {f: False for f in args.files}, []
+    else:
+        status, numstat = _changed(args.base)
+    ctx = Context(readme=Path("README.md").read_text() if Path("README.md").exists() else "",
+                  tools=_load_terms("tool-terms.txt"), slop=_load_terms("slop-terms.txt"),
+                  exists=os.path.exists)
+    findings, ignored = check_pr_size(numstat), {}
+    for path, is_new in sorted(status.items()):
+        if path.endswith(".md") and Path(path).exists():
+            text = Path(path).read_text()
+            findings += check_file(path, text, ctx, is_new)
+            ignored[path] = parse_ignores(text)
+    body = Path(args.pr_body_file).read_text() if args.pr_body_file else os.environ.get("PR_BODY")
+    if body is not None:
+        findings += check_pr_body(body)
+    code, lines = report(findings, ignored)
+    print("\n".join(lines))
+    return code
+
+
+if __name__ == "__main__":
+    sys.exit(main())
