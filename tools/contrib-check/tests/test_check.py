@@ -134,9 +134,13 @@ class Placeholders(unittest.TestCase):
         self.assertEqual(check.check_placeholders("a.md", GOOD_DOC), [])
 
     def test_flags_each_term(self):
-        for term in ("TODO: fix", "FIXME", "Lorem ipsum", "placeholder", "test comment", "your-org"):
+        for term in ("TODO: fix", "FIXME", "Lorem ipsum", "test comment", "your-org"):
             f = check.check_placeholders("a.md", f"# T\n\n{term}\n")
             self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S5", "error", 3)], term)
+
+    def test_word_placeholder_only_warns(self):
+        f = check.check_placeholders("a.md", "# T\n\nUse a placeholder variable.\n")
+        self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S5", "warn", 3)])
 
 
 class SnippetSyntax(unittest.TestCase):
@@ -217,6 +221,10 @@ class ToolDefaults(unittest.TestCase):
         doc = "We deploy with Argo.\n\nArgo syncs state.\n"
         f = check.check_tool_defaults("a.md", doc, TOOLS)
         self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S2", "warn", 1)])
+
+    def test_the_word_like_is_not_a_swap_signal(self):
+        doc = "Teams like the speed of Argo.\n"
+        self.assertEqual(len(check.check_tool_defaults("a.md", doc, TOOLS)), 1)
 
     def test_tool_inside_code_fence_ignored(self):
         doc = "```bash\nargo sync\nflyway migrate\n```\n"
@@ -340,6 +348,12 @@ class Orchestration(unittest.TestCase):
         text = "<!-- contrib-check: ignore S5 -->\n# T\n\nTODO\n"
         found = {f.std for f in check.check_file("standards/a.md", text, self.CTX, is_new=False)}
         self.assertNotIn("S5", found)
+
+
+class NameStatus(unittest.TestCase):
+    def test_added_modified_and_renamed(self):
+        out = "A\tnew.md\nM\told.md\nR087\tfrom.md\tto.md\n"
+        self.assertEqual(check.parse_name_status(out), {"new.md": True, "old.md": False, "to.md": False})
 
 
 class Report(unittest.TestCase):

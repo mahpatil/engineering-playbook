@@ -20,10 +20,11 @@ FENCE_WARN_LINES = 15
 CONFIG_FENCE_MAX = 20
 FENCE_SHARE_WARN = 0.30
 CONFIG_LANGS = {"yaml", "yml", "hcl", "terraform", "tf", "json", "dockerfile"}
-PLACEHOLDER_RE = re.compile(r"\b(TODO|FIXME|lorem ipsum|placeholder|test comment|your-org)\b", re.I)
+PLACEHOLDER_RE = re.compile(r"\b(TODO|FIXME|lorem ipsum|test comment|your-org)\b", re.I)
+SOFT_PLACEHOLDER_RE = re.compile(r"\bplaceholder\b", re.I)
 EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF\u2600-\u27BF]")
 SELF_CALL_RE = re.compile(r"\bself\.(\w+)\(")
-SWAP_RE = re.compile(r"e\.g\.|such as|or equivalent|alternative|swap|for example|for instance|\blike\b", re.I)
+SWAP_RE = re.compile(r"e\.g\.|such as|or equivalent|alternative|swap|for example|for instance", re.I)
 ALT_RE = re.compile(r"alternative|when to use|trade-?offs?|trade off", re.I)
 RECOMMEND_RE = re.compile(r"\brecommend|\bdefault\b", re.I)
 RELATED_RE = re.compile(r"related|how this fits|relationship to|\bvs\.?\b|compared (to|with)|complements", re.I)
@@ -144,9 +145,13 @@ def check_snippet_limits(path, text):
 
 
 def check_placeholders(path, text):
-    return [Finding(path, no, "S5", ERROR, f"placeholder text '{m.group(0)}'")
-            for no, ln in enumerate(text.splitlines(), 1)
-            for m in [PLACEHOLDER_RE.search(ln)] if m]
+    out = []
+    for no, ln in enumerate(text.splitlines(), 1):
+        for rx, sev in ((PLACEHOLDER_RE, ERROR), (SOFT_PLACEHOLDER_RE, WARN)):
+            m = rx.search(ln)
+            if m:
+                out.append(Finding(path, no, "S5", sev, f"placeholder text '{m.group(0)}'"))
+    return out
 
 
 def _python_findings(path, start, body):
@@ -332,12 +337,18 @@ def _git(*args):
     return subprocess.run(["git", *args], capture_output=True, text=True, check=True).stdout
 
 
+def parse_name_status(output):
+    """Map path -> is_new from `git diff --name-status`; renames resolve to the new path."""
+    status = {}
+    for ln in output.splitlines():
+        code, *paths = ln.split("\t")
+        status[paths[-1]] = code == "A"
+    return status
+
+
 def _changed(base):
     """Return ({path: is_new}, [(path, added_lines)]) for the PR diff against base."""
-    status = {}
-    for ln in _git("diff", "--name-status", "--diff-filter=AM", f"{base}...HEAD").splitlines():
-        code, path = ln.split("\t", 1)
-        status[path] = code == "A"
+    status = parse_name_status(_git("diff", "--name-status", "--diff-filter=AMR", f"{base}...HEAD"))
     numstat = []
     for ln in _git("diff", "--numstat", f"{base}...HEAD").splitlines():
         added, _, path = ln.split("\t", 2)

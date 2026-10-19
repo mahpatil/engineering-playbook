@@ -31,5 +31,5 @@ jobs:
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          files=$(git diff --name-only --diff-filter=AM "origin/${BASE_REF}...HEAD" -- '*.md')
-          [ -z "$files" ] || npx --yes markdownlint-cli2 $files
+          git diff -z --name-only --diff-filter=AMR "origin/${BASE_REF}...HEAD" -- '*.md' \
+            | xargs -0 -r npx --yes markdownlint-cli2@0.23.3
