@@ -90,5 +90,102 @@ class PrBody(unittest.TestCase):
         self.assertEqual(len(check.check_pr_body("")), 3)
 
 
+def fence(lang, n, body="key: v"):
+    return f"```{lang}\n" + "\n".join(f"{body}{i}" for i in range(n)) + "\n```\n"
+
+
+class SnippetLimits(unittest.TestCase):
+    def test_short_fence_ok(self):
+        self.assertEqual(check.check_snippet_limits("a.md", GOOD_DOC + fence("bash", 5)), [])
+
+    def test_boundaries_generic(self):
+        doc = GOOD_DOC + "x\n" * 100
+        self.assertEqual(check.check_snippet_limits("a.md", doc + fence("bash", 15)), [])
+        f = check.check_snippet_limits("a.md", doc + fence("bash", 16))
+        self.assertEqual([(x.std, x.severity) for x in f], [("S5", "warn")])
+
+    def test_boundaries_config_error(self):
+        doc = GOOD_DOC + "x\n" * 200
+        self.assertEqual(stds(check.check_snippet_limits("a.md", doc + fence("yaml", 20)), severity="error"), [])
+        f = check.check_snippet_limits("a.md", doc + fence("yaml", 21))
+        self.assertEqual(len(stds(f, "S5", "error")), 1)
+
+    def test_multi_document_yaml_errors(self):
+        doc = GOOD_DOC + "x\n" * 50 + "```yaml\na: 1\n---\nb: 2\n```\n"
+        self.assertEqual(len(stds(check.check_snippet_limits("a.md", doc), severity="error")), 1)
+
+    def test_multi_resource_terraform_errors(self):
+        tf = 'resource "a" "b" {}\nresource "c" "d" {}\n'
+        doc = GOOD_DOC + "x\n" * 50 + f"```hcl\n{tf}```\n"
+        self.assertEqual(len(stds(check.check_snippet_limits("a.md", doc), severity="error")), 1)
+
+    def test_fenced_share_warns(self):
+        doc = "intro\n" + fence("bash", 14) + fence("bash", 14)
+        f = check.check_snippet_limits("a.md", doc)
+        self.assertTrue(any("share" in x.message for x in f))
+
+    def test_lines_in_fence_not_treated_as_headings(self):
+        doc = "# T\n```md\n## What is\n## Why\n```\n"
+        self.assertEqual(len(check.check_purpose_opener("a.md", doc)), 1)
+
+
+class Placeholders(unittest.TestCase):
+    def test_clean(self):
+        self.assertEqual(check.check_placeholders("a.md", GOOD_DOC), [])
+
+    def test_flags_each_term(self):
+        for term in ("TODO: fix", "FIXME", "Lorem ipsum", "placeholder", "test comment", "your-org"):
+            f = check.check_placeholders("a.md", f"# T\n\n{term}\n")
+            self.assertEqual([(x.std, x.severity, x.line) for x in f], [("S5", "error", 3)], term)
+
+
+class SnippetSyntax(unittest.TestCase):
+    def test_valid_python_ok(self):
+        doc = "```python\ndef f():\n    return 1\n```\n"
+        self.assertEqual(check.check_snippet_syntax("a.md", doc), [])
+
+    def test_invalid_python_warns(self):
+        doc = "```python\ndef f(:\n```\n"
+        self.assertEqual([(x.std, x.severity) for x in check.check_snippet_syntax("a.md", doc)], [("S5", "warn")])
+
+    def test_ellipsis_skipped(self):
+        doc = "```python\ndef f(:\n    ...\n```\n"
+        self.assertEqual(check.check_snippet_syntax("a.md", doc), [])
+
+    def test_undefined_self_method_warns(self):
+        doc = ("```python\nclass S:\n    async def run(self):\n"
+               "        await self.compensate(1)\n```\n")
+        f = check.check_snippet_syntax("a.md", doc)
+        self.assertEqual(len(f), 1)
+        self.assertIn("compensate", f[0].message)
+
+    def test_defined_self_method_ok(self):
+        doc = ("```python\nclass S:\n    def run(self):\n        self.c()\n"
+               "    def c(self):\n        pass\n```\n")
+        self.assertEqual(check.check_snippet_syntax("a.md", doc), [])
+
+    def test_bad_json_warns_good_json_ok(self):
+        self.assertEqual(len(check.check_snippet_syntax("a.md", "```json\n{a:1}\n```\n")), 1)
+        self.assertEqual(check.check_snippet_syntax("a.md", '```json\n{"a": 1}\n```\n'), [])
+
+
+class SlopPhrases(unittest.TestCase):
+    TERMS = ["delve", "it's important to note"]
+
+    def test_clean(self):
+        self.assertEqual(check.check_slop("a.md", GOOD_DOC, self.TERMS), [])
+
+    def test_flags_terms_case_insensitive(self):
+        f = check.check_slop("a.md", "# T\n\nLet us Delve in. It's important to note this.\n", self.TERMS)
+        self.assertEqual([(x.std, x.severity) for x in f], [("S5", "warn")] * 2)
+
+    def test_emoji_in_heading_warns(self):
+        f = check.check_slop("a.md", "# T\n\n## \U0001F680 Quick start\n", [])
+        self.assertEqual(len(f), 1)
+
+    def test_emoji_in_body_ok(self):
+        self.assertEqual(check.check_slop("a.md", "# T\n\nship it \U0001F680\n", []), [])
+
+
 if __name__ == "__main__":
     unittest.main()
