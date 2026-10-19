@@ -14,6 +14,7 @@ Thank you for your interest in contributing! This document provides guidelines f
 ## Code of Conduct
 
 This project adheres to a code of conduct. By participating, you agree to uphold:
+
 - Respectful communication
 - Constructive feedback
 - Focus on technical merit
@@ -49,23 +50,18 @@ Proposing a new standard?
 ### Contributing Code
 
 1. **Fork** the repository
-2. **Create** a feature branch:
-```bash
-   git checkout -b feature/your-standard-name
-```
+2. **Create** a feature branch: `git checkout -b feature/your-standard-name`
 3. **Make** your changes
 4. **Test** thoroughly
-5. **Commit** with clear messages:
-```bash
-   git commit -m "feat: Add Kubernetes autoscaling standard"
-```
+5. **Commit** with clear messages, e.g. `git commit -s -m "feat: Add Kubernetes autoscaling standard"`
 6. **Push** to your fork
 7. **Create** a Pull Request
 
 ## Standard Template
 
 Every new standard must follow this structure:
-```
+
+```text
 standards/your-standard-name/
 ├── README.md                    # Main documentation
 ├── architecture/
@@ -84,6 +80,7 @@ standards/your-standard-name/
 ```
 
 ### README.md Template
+
 ```markdown
 # [Standard Name]
 
@@ -126,6 +123,7 @@ standards/your-standard-name/
 ## Code Guidelines
 
 ### Python
+
 ```python
 # Use type hints
 def process_event(event: Dict[str, Any]) -> bool:
@@ -147,6 +145,7 @@ def process_event(event: Dict[str, Any]) -> bool:
 ```
 
 ### Terraform
+
 ```terraform
 # Use consistent naming
 resource "aws_instance" "web_server" {
@@ -166,6 +165,7 @@ resource "aws_instance" "web_server" {
 ```
 
 ### YAML
+
 ```yaml
 # Use 2-space indentation
 # Include comments for clarity
@@ -195,6 +195,7 @@ jobs:
 ### Executive Guides
 
 Format:
+
 ```markdown
 # [Standard Name] for Executives
 
