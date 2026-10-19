@@ -35,7 +35,7 @@ CODE_CAP = 500
 DOC_WARN_LINES = 400
 DOC_SUFFIXES = (".md", ".html")
 DOC_DIRS = ("docs/", "specs/")
-EXEMPT_DIRS = ("templates/", "references/")
+EXEMPT_DIRS = ("templates/", "references/", "standards/claude-md/")
 IGNORE_RE = re.compile(r"<!--\s*contrib-check:\s*ignore\s+([^>]*?)\s*-->", re.I)
 HERE = Path(__file__).resolve().parent
 PR_SECTIONS = ("What changed", "How tested", "What could go wrong")
@@ -293,8 +293,12 @@ class Context:
     exists: Callable[[str], bool]
 
 
+def is_checked(path):
+    return path.startswith("standards/") and path.endswith(".md") and not path.startswith(EXEMPT_DIRS)
+
+
 def check_file(path, text, ctx, is_new):
-    if path.startswith(EXEMPT_DIRS) or not (path.startswith("standards/") and path.endswith(".md")):
+    if not is_checked(path):
         return []
     found = (check_purpose_opener(path, text) + check_snippet_limits(path, text)
              + check_placeholders(path, text) + check_snippet_syntax(path, text)
@@ -303,7 +307,10 @@ def check_file(path, text, ctx, is_new):
              + check_fits_context(path, text, ctx.exists) + check_claims(path, text))
     if is_new:
         found += check_readme_indexed(path, ctx.readme)
-    return apply_ignores(found, parse_ignores(text))
+    found = apply_ignores(found, parse_ignores(text))
+    if not is_new:
+        found = [Finding(f.path, f.line, f.std, WARN, f.message) for f in found]
+    return found
 
 
 def report(findings, ignored=None):
@@ -353,7 +360,7 @@ def main(argv=None):
                   exists=os.path.exists)
     findings, ignored = check_pr_size(numstat), {}
     for path, is_new in sorted(status.items()):
-        if path.endswith(".md") and Path(path).exists():
+        if is_checked(path) and Path(path).exists():
             text = Path(path).read_text()
             findings += check_file(path, text, ctx, is_new)
             ignored[path] = parse_ignores(text)

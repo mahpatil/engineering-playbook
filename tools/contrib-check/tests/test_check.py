@@ -319,6 +319,23 @@ class Orchestration(unittest.TestCase):
         found = {f.std for f in check.check_file("standards/a.md", GOOD_DOC, self.CTX, is_new=False)}
         self.assertNotIn("S8", found)
 
+    def test_is_checked(self):
+        self.assertTrue(check.is_checked("standards/detailed/a.md"))
+        for p in ("CONTRIBUTING.md", "templates/a.md", "standards/claude-md/x.md", "standards/a.txt"):
+            self.assertFalse(check.is_checked(p), p)
+
+    def test_claude_md_templates_exempt(self):
+        self.assertEqual(check.check_file("standards/claude-md/api/CLAUDE.md", "TODO", self.CTX, is_new=True), [])
+
+    def test_modified_files_only_warn(self):
+        found = check.check_file("standards/a.md", "# T\n\nTODO\n", self.CTX, is_new=False)
+        self.assertTrue(found)
+        self.assertEqual(stds(found, severity="error"), [])
+
+    def test_new_files_keep_errors(self):
+        found = check.check_file("standards/a.md", "# T\n\nTODO\n", self.CTX, is_new=True)
+        self.assertTrue(stds(found, severity="error"))
+
     def test_pragma_suppresses(self):
         text = "<!-- contrib-check: ignore S5 -->\n# T\n\nTODO\n"
         found = {f.std for f in check.check_file("standards/a.md", text, self.CTX, is_new=False)}

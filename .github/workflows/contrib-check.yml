@@ -1,0 +1,35 @@
+name: Contribution Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  contrib-check:
+    name: Contribution standards
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Unit-test the checker
+        run: python3 -m unittest discover tools/contrib-check/tests
+
+      - name: Check contribution standards
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_REF: ${{ github.base_ref }}
+        run: python3 tools/contrib-check/check.py --base "origin/${BASE_REF}"
+
+      - name: Lint changed markdown
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          files=$(git diff --name-only --diff-filter=AM "origin/${BASE_REF}...HEAD" -- '*.md')
+          [ -z "$files" ] || npx --yes markdownlint-cli2 $files
