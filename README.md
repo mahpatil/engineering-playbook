@@ -65,6 +65,7 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [Microservices](./standards/detailed/microservices.md) | ✅ Stable | Service boundaries and operations | [View](./standards/detailed/microservices.md) |
 | [API design](./standards/detailed/api-design.md) | 📋 Beta | Contracts and interfaces | [View](./standards/detailed/api-design.md) |
 | [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP | [View](./standards/detailed/data/README.md) |
+| [Database migrations](./standards/detailed/data/database-migrations.md) | 📋 Beta | Where and when schema changes run | [View](./standards/detailed/data/database-migrations.md) |
 | [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | [CI/CD and DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
