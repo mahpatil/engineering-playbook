@@ -54,6 +54,7 @@ Multi-tenant SaaS enforces isolation at the data layer (schema-per-tenant, datab
 | Standard | What It Covers |
 |----------|---------------|
 | [Data Architecture](./data-architecture.md) | Core patterns: database per service, Saga, CQRS, operational vs analytical separation |
+| [Database Migrations](./database-migrations.md) | Where and when schema migrations run in a release; expand/contract |
 | [Database Type Selection](./database-type.md) | Relational vs NoSQL decision guide; when to use each NoSQL type; polyglot persistence rules |
 | [Data Lake](./data-lake.md) | Bronze/Silver/Gold zones; ingestion patterns; storage formats; data quality standards |
 | [Analytics Patterns](./analytics-patterns.md) | Rolling aggregation, cumulative, funnel, cohort analysis; metric consistency standards |
