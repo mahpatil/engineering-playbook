@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{APP_NAME}}-{{ENVIRONMENT}}
+  namespace: argocd
+  labels: { app: "{{APP_NAME}}", env: "{{ENVIRONMENT}}" }
+  finalizers: [resources-finalizer.argocd.argoproj.io]
+spec:
+  project: default
+  source:
+    repoURL: "{{GITOPS_REPO_URL}}"
+    targetRevision: "{{TARGET_REVISION}}"
+    path: "{{CHART_PATH}}"
+    helm:
+      valueFiles: [values.yaml, values-{{ENVIRONMENT}}.yaml]
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: "{{NAMESPACE}}"
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }
+    syncOptions: [CreateNamespace=true, PruneLast=true, ApplyOutOfSyncOnly=true]
+    retry:
+      limit: 5
+      backoff: { duration: 5s, factor: 2, maxDuration: 3m }

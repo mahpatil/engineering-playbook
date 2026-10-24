@@ -1,0 +1,49 @@
+name: Build, Sign, and SLSA Provenance
+on:
+  workflow_call:
+    inputs:
+      image-name: { required: true, type: string }
+      image-tag: { required: false, type: string, default: "${{ github.sha }}" }
+      dockerfile: { required: false, type: string, default: "Dockerfile" }
+      context: { required: false, type: string, default: "." }
+      registry: { required: false, type: string, default: "ghcr.io" }
+    outputs:
+      image-digest:
+        value: ${{ jobs.build.outputs.image-digest }}
+      image-uri:
+        value: ${{ jobs.build.outputs.image-uri }}
+permissions:
+  id-token: write
+  attestations: write
+  packages: write
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image-digest: ${{ steps.build-push.outputs.digest }}
+      image-uri: ${{ inputs.image-name }}@${{ steps.build-push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: sigstore/cosign-installer@v3.8.1
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: build-push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
+          push: true
+          tags: ${{ inputs.image-name }}:${{ inputs.image-tag }}
+      - name: Sign container image
+        run: cosign sign --yes "${{ inputs.image-name }}@${{ steps.build-push.outputs.digest }}"
+      - name: Attest SLSA provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ inputs.image-name }}
+          subject-digest: ${{ steps.build-push.outputs.digest }}
+          push-to-registry: true

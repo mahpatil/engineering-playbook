@@ -16,6 +16,7 @@
 - **CI/CD:** GitHub Actions
 
 ## Deployment
+
 - **IaC**: use Terraform to setup cloud resources (provider-agnostic)
 - **Local**: for local deployment generate k8s for kind & minikube
 
@@ -27,7 +28,7 @@
 - Domain-Driven Design with bounded contexts, aggregates, value objects, domain events
 - Event-driven integration between services (outbox pattern, saga for workflows)
 - API-First design with OpenAPI specs
-- Cost efficient - Implement FinOps from day one right-size, monitor spending, auto-scaling 
+- Cost efficient - Implement FinOps from day one right-size, monitor spending, auto-scaling
 - CQRS where read/write complexity (only if required)
 
 ## Code Standards
@@ -67,7 +68,7 @@
 
 ## Project Structure
 
-```
+```text
 .github/workflows/    # CI/CD pipelines
 services/             # Backend microservices
   {{SERVICE_NAME}}/
