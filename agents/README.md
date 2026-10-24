@@ -14,7 +14,7 @@ Every agent is **CLAUDE.md-aware**: its system prompt references and enforces th
 | [app-deployer](./app-deployer/) | Produce a complete deployment artefact set | Repo description, environment | Dockerfile, K8s manifests, Helm chart, GitHub Actions CI |
 | [api-scaffolder](./api-scaffolder/) | Scaffold OpenAPI spec + route stubs | API name, resources, language | `openapi.yaml`, controller/handler stubs, validator stubs |
 | [standards-reviewer](./standards-reviewer/) | Flag CLAUDE.md violations in code or a PR diff | Code or diff | Structured findings with severity + remediation |
-| [deployment-validator](./deployment-validator/) | Audit a live environment against infra standards | K8s context or Terraform state | Compliance report with PASS/FAIL/WARN per control |
+| [deployment-validator](./deployment-validator/) | Audit manifests pre-promotion (CI) and live environments against infra standards | Rendered K8s YAML (static) or live K8s context / Terraform state (live) | Compliance report with PASS/FAIL/WARN per control + machine-readable JSON |
 
 ---
 
@@ -22,7 +22,7 @@ Every agent is **CLAUDE.md-aware**: its system prompt references and enforces th
 
 Agents are designed to chain. The canonical provisioning pipeline is:
 
-```
+```text
 Engineer provides:
   - App name and description
   - Target cloud (AWS / GCP / Azure)
@@ -30,30 +30,43 @@ Engineer provides:
   - API resources (e.g. Orders, Customers)
 
        ┌─────────────────────┐
-       │   infra-provisioner  │  →  Terraform modules (VPC, DB, GKE/EKS/AKS, Redis, IAM)
+       │  infra-provisioner  │  →  Terraform modules (VPC, DB, GKE/EKS/AKS, Redis, IAM)
        └──────────┬──────────┘
                   │ outputs: infra/ directory
                   ▼
        ┌─────────────────────┐
-       │    api-scaffolder    │  →  openapi.yaml + route stubs (Java or .NET)
+       │   api-scaffolder    │  →  openapi.yaml + route stubs (Java or .NET)
        └──────────┬──────────┘
                   │ outputs: docs/api/, src/api/
                   ▼
        ┌─────────────────────┐
-       │    app-deployer      │  →  Dockerfile, k8s manifests, Helm chart, GitHub Actions
+       │    app-deployer     │  →  Dockerfile, k8s manifests, Helm chart, GitHub Actions
        └──────────┬──────────┘
                   │ outputs: deploy/, .github/workflows/
                   ▼
-       ┌─────────────────────┐      ┌──────────────────────┐
-       │  standards-reviewer  │  +   │ deployment-validator  │
-       └─────────────────────┘      └──────────────────────┘
-         Pre-merge: reviews code        Post-deploy: audits live
-         against CLAUDE.md standards    infra against standards
+       ┌─────────────────────┐       ┌──────────────────────┐
+       │  standards-reviewer │   +   │ deployment-validator │
+       └──────────┬──────────┘       └──────────┬───────────┘
+         Pre-merge (CI):               Pre-merge (CI, MODE: static):
+         reviews code against          audits rendered manifests
+         CLAUDE.md standards           against infra standards
+                  │                             │
+                  └─────────────┬───────────────┘
+                                │ deploy to target environment
+                                ▼
+                    ┌──────────────────────┐
+                    │ deployment-validator │
+                    └──────────────────────┘
+                      Post-deploy (MODE: live):
+                      audits live infra against standards
 ```
+
+In this composition, `deployment-validator` operates in dual modes: pre-merge static manifest validation in CI (`MODE: static`) to gate deployments before cluster application, and post-deployment runtime auditing (`MODE: live`) to detect drift.
 
 ### Practical Integration Patterns
 
-**Pattern 1: New Service Bootstrap (fully automated)**
+#### Pattern 1: New Service Bootstrap (fully automated)
+
 ```bash
 # In a new repo, run sequentially:
 claude --agent infra-provisioner < agents/infra-provisioner/example-input.md
@@ -61,7 +74,8 @@ claude --agent api-scaffolder    < agents/api-scaffolder/example-input.md
 claude --agent app-deployer      < agents/app-deployer/example-input.md
 ```
 
-**Pattern 2: PR Gate (CI-integrated)**
+#### Pattern 2: PR Gate (CI-integrated)
+
 ```yaml
 # .github/workflows/standards-review.yml
 - uses: anthropics/claude-code-action@v1
@@ -70,7 +84,8 @@ claude --agent app-deployer      < agents/app-deployer/example-input.md
     input: ${{ github.event.pull_request.diff_url }}
 ```
 
-**Pattern 3: Compliance Audit (scheduled)**
+#### Pattern 3: Compliance Audit (scheduled)
+
 ```yaml
 # Run deployment-validator weekly against prod
 - uses: anthropics/claude-code-action@v1
@@ -79,13 +94,31 @@ claude --agent app-deployer      < agents/app-deployer/example-input.md
     input: "cluster=prod-acme-gke environment=prod"
 ```
 
+#### Pattern 4: PR Manifest Compliance Gate (CI-integrated)
+
+```yaml
+# Validate rendered Kubernetes manifests pre-merge in CI
+- name: Render Helm manifests
+  run: helm template order-service ./deploy/helm/order-service -f values-staging.yaml > rendered.yaml
+
+- uses: anthropics/claude-code-action@v1
+  with:
+    agent: deployment-validator
+    input: |
+      MODE: static
+      FAIL_LEVEL: HIGH
+      ENVIRONMENT: staging
+      SERVICE: order-service
+      MANIFEST: rendered.yaml
+```
+
 ---
 
 ## Standards Inheritance
 
 All agents inherit from and enforce the CLAUDE.md hierarchy:
 
-```
+```text
 standards/claude-md/CLAUDE.md               ← root principles (all agents)
   ├── infra/CLAUDE.md                        ← infra-provisioner, app-deployer, deployment-validator
   ├── api/CLAUDE.md                          ← api-scaffolder, standards-reviewer
@@ -108,7 +141,7 @@ When any CLAUDE.md is updated, agents that reference it immediately reflect the 
 
 ### Adding a New Agent
 
-```
+```text
 agents/
   my-new-agent/
     AGENT.md            ← system prompt: what the agent is and how it behaves
@@ -117,6 +150,7 @@ agents/
 ```
 
 Follow the existing AGENT.md structure:
+
 1. **Identity** — what this agent is and does
 2. **Standards references** — which CLAUDE.md files it enforces
 3. **Input format** — structured schema for inputs
@@ -164,6 +198,7 @@ git checkout tags/v1.2.0 -- agents/
 ## Contributing
 
 Follow `CONTRIBUTING.md` at the repo root. For agent changes specifically:
+
 1. Update the AGENT.md system prompt
 2. Update the README.md if input/output contracts change
 3. Update `example-input.md` to reflect the new behaviour
