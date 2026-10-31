@@ -107,6 +107,7 @@ Set a lock timeout in migration scripts so a blocked statement fails fast instea
 ## ⏪ Failure and rollback
 
 - A failed migration stops the release; confirm version N is still healthy, read the job logs, and check for blocking locks.
+
 ```mermaid
 flowchart TD
     F[🛑 Migration job fails] --> H{Version N healthy?}
