@@ -2,7 +2,17 @@
 
 Standards for where and when schema migrations run during a release, and how to change a schema without downtime.
 
-## 📖 What are database migrations (as a release concern)?
+A migration sits where three concerns meet:
+
+| Concern | What it contributes |
+|---|---|
+| 🗄️ **Data** | The schema change itself, ownership and backfills |
+| 🧩 **Application** | Code that must work against both the old and new schema |
+| 🚀 **Release** | When the change runs, with which identity, and what happens on failure |
+
+This standard covers the release side and the compatibility rules the other two must follow. It does not cover schema design.
+
+## 📖 What are database migrations?
 
 A migration tool (such as Flyway, Liquibase, Alembic or Goose) knows **how** to apply versioned schema changes and track them. This standard covers **where and when** they run in a release and what compatibility they must keep. The two fit together: the tool is the engine, this standard is the lifecycle around it.
 
@@ -130,6 +140,6 @@ flowchart TD
 
 ## 🔗 Related Standards
 
-- [Data Architecture](./data-architecture.md): database per service and schema ownership.
-- [Progressive Delivery](../release-engineering/progressive-delivery.md): the two-version rollout this compatibility serves.
-- [Delivery Models and Promotion](../release-engineering/gitops-promotions.md): where the pre-deploy step sits in the pipeline.
+- [Data Architecture](../data/data-architecture.md): database per service and schema ownership.
+- [Progressive Delivery](./progressive-delivery.md): the two-version rollout this compatibility serves.
+- [Delivery Models and Promotion](./gitops-promotions.md): where the pre-deploy step sits in the pipeline.

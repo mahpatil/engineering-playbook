@@ -64,7 +64,7 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [Overall north star](./standards/overall/) | ✅ Stable | Platform-agnostic architecture | [View](./standards/overall/README.md) |
 | [Microservices](./standards/detailed/microservices.md) | ✅ Stable | Service boundaries and operations | [View](./standards/detailed/microservices.md) |
 | [API design](./standards/detailed/api-design.md) | 📋 Beta | Contracts and interfaces | [View](./standards/detailed/api-design.md) |
-| [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP; includes [database migrations](./standards/detailed/data/database-migrations.md) | [View](./standards/detailed/data/README.md) |
+| [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP | [View](./standards/detailed/data/README.md) |
 | [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | [CI/CD and DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
@@ -72,6 +72,7 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [Release engineering](./standards/detailed/release-engineering/README.md) | 📋 Beta | Progressive delivery, promotion | [View](./standards/detailed/release-engineering/README.md) |
 | [Progressive delivery](./standards/detailed/release-engineering/progressive-delivery.md) | 📋 Beta | Canary, blue-green, rollback gates | [View](./standards/detailed/release-engineering/progressive-delivery.md) |
 | [Delivery models and promotion](./standards/detailed/release-engineering/gitops-promotions.md) | 📋 Beta | Pull, push, managed delivery | [View](./standards/detailed/release-engineering/gitops-promotions.md) |
+| [Database migrations](./standards/detailed/release-engineering/database-migrations.md) | 📋 Beta | Schema changes in a release | [View](./standards/detailed/release-engineering/database-migrations.md) |
 | [Developer tools](./tools/tools.md) | 📋 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
 | [Agent catalog](./agents/README.md) | 🚧 Beta | Reusable engineering agents | [View](./agents/README.md) |
 | [Claude templates](./templates/) | 🚧 Beta | AI-assisted delivery | [View](./templates/README.md) |

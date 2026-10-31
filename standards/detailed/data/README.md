@@ -67,7 +67,7 @@ Multi-tenant SaaS enforces isolation at the data layer (schema-per-tenant, datab
 | [Data Lake](./data-lake.md) | Bronze/Silver/Gold zones; ingestion patterns; storage formats; data quality standards |
 | [Analytics Patterns](./analytics-patterns.md) | Rolling aggregation, cumulative, funnel, cohort analysis; metric consistency standards |
 | [AI/ML Data Patterns](./ai-ml-patterns.md) | Feature store, point-in-time correctness, model registry, MLOps monitoring |
-| [Database Migrations](./database-migrations.md) | Where and when schema changes run in a release; expand/contract for zero downtime |
+| [Database Migrations](../release-engineering/database-migrations.md) | Release-time schema changes and expand/contract; lives under release engineering |
 | [Azure Multi-Tenant Design](./azure-multi-tenant-data-design-patterns.md) | Tenant isolation patterns for Azure SQL and Cosmos DB; shared schema vs database per tenant |
 
 ---
