@@ -44,6 +44,7 @@ Without shared defaults each team invents its own release path, and incidents sh
 |---|---|
 | 🐤 [Progressive Delivery](./progressive-delivery.md) | Canary and blue-green strategies, bake windows, metric gates, automated rollback |
 | 🔄 [Delivery Models and Environment Promotion](./gitops-promotions.md) | Pull, push and managed delivery; promotion between environments; drift; rollback |
+| 🗄️ [Database Migrations](./database-migrations.md) | Where and when schema changes run in a release; expand/contract for zero downtime |
 
 ## 🧭 Where to Start
 
