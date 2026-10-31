@@ -68,6 +68,7 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
 | [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
 | [CI/CD and DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
+| [Supply chain security](./standards/detailed/supply-chain-security.md) | 📋 Beta | Scanning, signing, provenance, admission | [View](./standards/detailed/supply-chain-security.md) |
 | [Observability](./standards/detailed/observability/README.md) | 📋 Beta | Logs, metrics, traces, SLOs | [View](./standards/detailed/observability/README.md) |
 | [Release engineering](./standards/detailed/release-engineering/README.md) | 📋 Beta | Progressive delivery, promotion | [View](./standards/detailed/release-engineering/README.md) |
 | [Progressive delivery](./standards/detailed/release-engineering/progressive-delivery.md) | 📋 Beta | Canary, blue-green, rollback gates | [View](./standards/detailed/release-engineering/progressive-delivery.md) |
