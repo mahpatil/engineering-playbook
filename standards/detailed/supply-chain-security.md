@@ -2,6 +2,8 @@
 
 Standards for proving where a container image came from and refusing to run anything unverified.
 
+> **Scope:** container images only. Dependency pinning, lockfiles and language-package supply chain controls are covered by the [CI/CD Pipeline](./cicd-pipeline.md) standard.
+
 ## What is supply chain security?
 
 It is the set of controls that tie a running image back to a known source commit and build, and that block images which lack that proof. The core pieces are vulnerability scanning, image signing, build provenance and enforcement at deploy time.
@@ -33,7 +35,7 @@ Build once, then scan, sign, attest, push and enforce:
 1. **Build** from a clean, pinned source revision on a minimal base image.
 2. **Scan** for vulnerabilities and fail the build above an agreed severity (a starting point is any fixable high or critical finding).
 3. **Sign** the image digest.
-4. **Attest** build provenance, and optionally an SBOM, and store both with the image in the registry.
+4. **Attest** build provenance, and optionally an SBOM, **push**, and store all with the image in the registry.
 5. **Admit** only verified images: an admission policy checks the signature and provenance before a pod starts.
 
 ## Choosing tools
@@ -49,7 +51,7 @@ The controls above are what the standard requires; the tools are examples.
 
 ## Rolling out enforcement
 
-Start in audit mode in lower environments for a trial period (two weeks is a reasonable start) to find unsigned sidecars and third-party images. Move to enforce mode in production once the audit is clean. Decide upfront how third-party images are handled, for example by mirroring and signing them internally.
+Start in audit mode in lower environments for a trial period (two weeks is a reasonable start — long enough to cover a typical sprint and image refresh cadence) to find unsigned sidecars and third-party images. Move to enforce mode in production once the audit is clean. Decide upfront how third-party images are handled, for example by mirroring and signing them internally.
 
 ## Checklist
 
@@ -63,5 +65,5 @@ Start in audit mode in lower environments for a trial period (two weeks is a rea
 ## Related Standards
 
 - [CI/CD Pipeline](./cicd-pipeline.md): where scanning and signing run.
-- [Delivery Models and Promotion](./release-engineering/gitops-promotions.md): promotion by digest, and short-lived credentials for push-based delivery.
+- [Delivery Models and Environment Promotion](./release-engineering/gitops-promotions.md): promotion by digest, and short-lived credentials for push-based delivery.
 - [Security Checklist](../overall/checklists.md#security--compliance-checklist): wider security controls this complements.
