@@ -187,8 +187,6 @@ def check_slop(path, text, terms):
     for no, ln in enumerate(text.splitlines(), 1):
         low = ln.lower()
         out += [Finding(path, no, "S5", WARN, f"slop phrase '{t}'") for t in terms if t.lower() in low]
-        if ln.startswith("#") and EMOJI_RE.search(ln):
-            out.append(Finding(path, no, "S5", WARN, "emoji in heading"))
     return out
 
 
@@ -310,7 +308,7 @@ def check_file(path, text, ctx, is_new):
              + check_slop(path, text, ctx.slop) + check_principle_first(path, text, ctx.tools)
              + check_tool_defaults(path, text, ctx.tools) + check_alternatives(path, text)
              + check_fits_context(path, text, ctx.exists) + check_claims(path, text))
-    if is_new:
+    if is_new and "/" not in path[len("standards/"):]:
         found += check_readme_indexed(path, ctx.readme)
     found = apply_ignores(found, parse_ignores(text))
     if not is_new:

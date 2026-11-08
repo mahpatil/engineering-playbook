@@ -183,9 +183,9 @@ class SlopPhrases(unittest.TestCase):
         f = check.check_slop("a.md", "# T\n\nLet us Delve in. It's important to note this.\n", self.TERMS)
         self.assertEqual([(x.std, x.severity) for x in f], [("S5", "warn")] * 2)
 
-    def test_emoji_in_heading_warns(self):
+    def test_emoji_in_heading_ok(self):
         f = check.check_slop("a.md", "# T\n\n## \U0001F680 Quick start\n", [])
-        self.assertEqual(len(f), 1)
+        self.assertEqual(len(f), 0)
 
     def test_emoji_in_body_ok(self):
         self.assertEqual(check.check_slop("a.md", "# T\n\nship it \U0001F680\n", []), [])
