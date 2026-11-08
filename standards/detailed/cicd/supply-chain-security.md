@@ -39,7 +39,7 @@ Build once, then scan, push, sign, attest, and admit:
 5. **Attest** build provenance, and optionally an SBOM, and store them with the image in the registry.
 6. **Admit** only verified images: an admission policy checks the signature and provenance before a pod starts. The policy pins the expected signer identity (the OIDC issuer and the repository or workflow that built the image), so a valid signature from any other identity is rejected.
 
-Images already running are rescanned on a schedule, and new critical findings alert the owning team. A documented break-glass path lets a named group bypass admission in an emergency; every bypass is logged, time-limited, and reviewed afterward.
+Images already running are rescanned on a schedule, and new critical findings block pods and alert the owning team. A documented break-glass path lets a named group bypass admission in an emergency; every bypass is logged, time-limited, and reviewed afterward.
 
 ## Choosing tools
 
@@ -54,7 +54,7 @@ The controls above are what the standard requires; the tools below are examples.
 
 ## Rolling out enforcement
 
-Start in audit mode in lower environments for a trial period (two weeks is a reasonable start — long enough to cover a typical sprint and image refresh cadence - although could be longer based on current estate) to find unsigned sidecars and third-party images. Move to enforce mode in production once the audit is clean. Decide upfront how to handle third-party images, for example by mirroring and signing them internally.
+Start in audit mode in lower environments for a trial period (two weeks is a reasonable start, long enough to cover a typical sprint and image refresh cadence; extend it for larger estates) to find unsigned sidecars and third-party images. Move to enforce mode in production once the audit is clean. Decide upfront how to handle third-party images, for example by mirroring and signing them internally.
 
 ## Checklist
 
