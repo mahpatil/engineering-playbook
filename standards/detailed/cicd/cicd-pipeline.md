@@ -23,6 +23,13 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 * Cloud provider (AWS, GCP, Azure) hosts workloads
 * Apps run as **Application (Python, Java, .NET) containers** on Container Apps
 
+## Documents
+
+| Standard | What It Covers |
+|----------|---------------|
+|  This guide | Coding, delivery and quality gates |
+| [Supply chain security](./standards/detailed/supply-chain-security.md) | Scanning, signing, provenance, admission |
+
 ---
 
 ## 🏗️ Architecture Summary
