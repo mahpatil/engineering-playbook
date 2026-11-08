@@ -70,6 +70,8 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [CI/CD and DevSecOps](./standards/detailed/cicd/cicd-pipeline.md) | 🚧 Beta  | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
 | [Observability](./standards/detailed/observability/README.md) | 🚧 Beta | Logs, metrics, traces, alerting, SLIs/SLOs | [View](./standards/detailed/observability/README.md) |
 | [Developer tools](./tools/tools.md) | 🚧 Beta  | Workstation setup and hooks | [View](./tools/tools.md) |
+| [Release engineering](./standards/detailed/release-engineering/README.md) | 🚧 Beta | Progressive delivery, promotion | [View](./standards/detailed/release-engineering/README.md) |
+| [Developer tools](./tools/tools.md) | 📋 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
 | [Agent catalog](./agents/README.md) | 🚧 Beta | Reusable engineering agents | [View](./agents/README.md) |
 | [Claude templates](./templates/) | 🚧 Beta | AI-assisted delivery | [View](./templates/README.md) |
 
