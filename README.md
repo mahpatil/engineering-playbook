@@ -66,10 +66,10 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [API design](./standards/detailed/api-design.md) | 📋 Beta | Contracts and interfaces | [View](./standards/detailed/api-design.md) |
 | [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP | [View](./standards/detailed/data/README.md) |
 | [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
-| [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
-| [CI/CD and DevSecOps](./standards/detailed/cicd-pipeline.md) | 📋 Planned | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
-| [Observability](./standards/detailed/observability/README.md) | 📋 Beta | Logs, metrics, traces, SLOs | [View](./standards/detailed/observability/README.md) |
-| [Developer tools](./tools/tools.md) | 📋 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
+| [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 🚧 Beta  | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
+| [CI/CD and DevSecOps](./standards/detailed/cicd/cicd-pipeline.md) | 🚧 Beta  | Delivery and quality gates | [View](./standards/detailed/cicd-pipeline.md) |
+| [Observability](./standards/detailed/observability/README.md) | 🚧 Beta | Logs, metrics, traces, alerting, SLIs/SLOs | [View](./standards/detailed/observability/README.md) |
+| [Developer tools](./tools/tools.md) | 🚧 Beta  | Workstation setup and hooks | [View](./tools/tools.md) |
 | [Agent catalog](./agents/README.md) | 🚧 Beta | Reusable engineering agents | [View](./agents/README.md) |
 | [Claude templates](./templates/) | 🚧 Beta | AI-assisted delivery | [View](./templates/README.md) |
 
