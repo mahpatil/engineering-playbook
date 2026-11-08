@@ -66,6 +66,7 @@ Start in audit mode in lower environments for a trial period (two weeks is a rea
 - [ ] Review third-party images and agree on approach.
 
 ## Related Standards
+
 - [Self-Service CI/CD Platform](./cicd-pipeline.md): the pipeline where image scanning runs.
 - [CI/CD Pipeline](./cicd-pipeline.md): where scanning and signing run.
 - [Delivery Models and Environment Promotion](./release-engineering/gitops-promotions.md): promotion by digest, and short-lived credentials for push-based delivery.
