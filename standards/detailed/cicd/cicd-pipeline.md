@@ -27,7 +27,7 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 
 | Standard | What It Covers |
 |----------|---------------|
-|  This guide | Coding, delivery and quality gates |
+| [CI/CD and DevSecOps](#overview) | Coding, delivery and quality gates |
 | [Supply chain security](./standards/detailed/supply-chain-security.md) | Scanning, signing, provenance, admission |
 
 ---
