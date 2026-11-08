@@ -8,8 +8,6 @@
 
 ---
 
-<a id="overview"></a>
-
 ## 🧠 Overview
 
 This platform enables developers to **self-service infrastructure and deployments** without needing deep IaC knowledge, while enforcing **Regulatory compliance by design**.
@@ -24,14 +22,6 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 * Terraform provisions infrastructure
 * Cloud provider (AWS, GCP, Azure) hosts workloads
 * Apps run as **Application (Python, Java, .NET) containers** on Container Apps
-
-## Documents
-
-| Standard | What It Covers |
-|----------|---------------|
-| [CI/CD and DevSecOps](#overview) | Coding, delivery and quality gates |
-| [Supply chain security](./supply-chain-security.md) | Scanning, signing, provenance, admission |
-
 
 ---
 
@@ -280,9 +270,6 @@ flowchart TD
 **What it shows:** Compliance is enforced in the pipeline itself — every Terraform change must pass policy and security scans or the PR is rejected; only after the approval gate is infra deployed, with policy enforcement continuing to guard the resources afterwards.
 
 ---
-## Related Standards
-
-- [Supply chain security](./standards/detailed/supply-chain-security.md) - Scanning, signing, provenance, admission
 
 ## Related Standards
 
