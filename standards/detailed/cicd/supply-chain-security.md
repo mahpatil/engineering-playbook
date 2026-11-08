@@ -30,13 +30,16 @@ Security and platform teams set policy, and application teams produce the eviden
 
 ## Pipeline
 
-Build once, then scan, sign, attest, push, and enforce:
+Build once, then scan, push, sign, attest, and admit:
 
 1. **Build** from a clean, pinned source revision on a minimal base image.
-2. **Scan** for vulnerabilities and fail the build above an agreed severity (a starting point is any fixable high or critical finding).
-3. **Sign** the image digest.
-4. **Attest** build provenance, and optionally an SBOM, **push**, and store all with the image in the registry.
-5. **Admit** only verified images: an admission policy checks the signature and provenance before a pod starts.
+2. **Scan** for vulnerabilities and fail the build above an agreed severity (a starting point is any fixable high or critical finding). Exceptions are time-limited, recorded with an owner, and reviewed before they expire.
+3. **Push** the image to the registry and record its digest.
+4. **Sign** the image digest.
+5. **Attest** build provenance, and optionally an SBOM, and store them with the image in the registry.
+6. **Admit** only verified images: an admission policy checks the signature and provenance before a pod starts. The policy pins the expected signer identity (the OIDC issuer and the repository or workflow that built the image), so a valid signature from any other identity is rejected.
+
+Images already running are rescanned on a schedule, and new critical findings alert the owning team. A documented break-glass path lets a named group bypass admission in an emergency; every bypass is logged, time-limited, and reviewed afterward.
 
 ## Choosing tools
 
@@ -63,7 +66,7 @@ Start in audit mode in lower environments for a trial period (two weeks is a rea
 - [ ] Review third-party images and agree on approach.
 
 ## Related Standards
-
+- [Self-Service CI/CD Platform](./cicd-pipeline.md): the pipeline where image scanning runs.
 - [CI/CD Pipeline](./cicd-pipeline.md): where scanning and signing run.
 - [Delivery Models and Environment Promotion](./release-engineering/gitops-promotions.md): promotion by digest, and short-lived credentials for push-based delivery.
 - [Security Checklist](../overall/checklists.md#security--compliance-checklist): wider security controls this complements.
