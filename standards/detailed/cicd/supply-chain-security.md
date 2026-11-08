@@ -2,7 +2,7 @@
 
 Standards for proving a container image's origin and refusing to run unverified ones.
 
-> **Current Scope:** container images only. Dependency pinning, lockfiles, and language-package supply chain controls are covered by the [CI/CD Pipeline](./cicd-pipeline.md) standard.
+> **Current Scope:** container images only. Dependency pinning, lockfiles, and language-package supply chain controls are  out of scope for now and will be covered by a separate standard.
 
 ## What is supply chain security?
 
