@@ -269,6 +269,9 @@ flowchart TD
 **What it shows:** Compliance is enforced in the pipeline itself — every Terraform change must pass policy and security scans or the PR is rejected; only after the approval gate is infra deployed, with policy enforcement continuing to guard the resources afterwards.
 
 ---
+## Related Standards
+
+- [Supply chain security](./standards/detailed/supply-chain-security.md) - Scanning, signing, provenance, admission
 
 # 🏁 Final Summary
 
