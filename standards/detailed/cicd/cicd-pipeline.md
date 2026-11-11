@@ -8,7 +8,7 @@
 
 ---
 
-# 🧠 Overview
+## 🧠 Overview
 
 This platform enables developers to **self-service infrastructure and deployments** without needing deep IaC knowledge, while enforcing **Regulatory compliance by design**.
 
@@ -23,9 +23,17 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 * Cloud provider (AWS, GCP, Azure) hosts workloads
 * Apps run as **Application (Python, Java, .NET) containers** on Container Apps
 
+## Documents
+
+| Standard | What It Covers |
+|----------|---------------|
+| [CI/CD and DevSecOps](#overview) | Coding, delivery and quality gates |
+| [Supply chain security](./standards/detailed/supply-chain-security.md) | Scanning, signing, provenance, admission |
+
+
 ---
 
-# 🏗️ Architecture Summary
+## 🏗️ Architecture Summary
 
 ## Platform Layers
 
@@ -58,7 +66,7 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 
 ---
 
-# 🔁 Self-Service Flow
+## 🔁 Self-Service Flow
 
 ## High-Level Steps
 
@@ -72,7 +80,7 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 
 ---
 
-# 🧱 Repository Structure
+## 🧱 Repository Structure
 
 ```text
 platform-modules/ # Can be separated by stack
@@ -111,7 +119,7 @@ service-templates/  # Organised by programming language
 
 ---
 
-# 🔐 Regulatory compliance (Built-In)
+## 🔐 Regulatory compliance (Built-In)
 
 ## Key Controls
 
@@ -131,7 +139,7 @@ service-templates/  # Organised by programming language
 
 ---
 
-# 🤖 AI Coding Agent Responsibilities
+## 🤖 AI Coding Agent Responsibilities
 
 * Generate Terraform from requests
 * Enforce use of approved modules
@@ -141,7 +149,7 @@ service-templates/  # Organised by programming language
 
 ---
 
-# 🧪 Developer Experience
+## 🧪 Developer Experience
 
 ## Example Request
 
@@ -161,9 +169,10 @@ New API Service:
 
 ---
 
-# 🚀 Evolution Roadmap
+## 🚀 Evolution Roadmap
 
 ## Phase 1
+
 * GitHub Issues → structured requests
 * Humans write code using AI Assistance
 
@@ -182,7 +191,7 @@ New API Service:
 
 ---
 
-# ⚠️ Key Principles
+## ⚠️ Key Principles
 
 * Developers never write raw Terraform
 * All infrastructure goes through approved modules
@@ -191,7 +200,7 @@ New API Service:
 
 ---
 
-# 📊 Mermaid Diagrams
+## 📊 Mermaid Diagrams
 
 ## 🧭 End-to-End Flow
 
@@ -270,7 +279,11 @@ flowchart TD
 
 ---
 
-# 🏁 Final Summary
+## Related Standards
+
+* [Supply chain security](./standards/detailed/supply-chain-security.md) - Scanning, signing, provenance, admission
+
+## 🏁 Final Summary
 
 This platform provides:
 
