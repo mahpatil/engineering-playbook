@@ -8,6 +8,8 @@
 
 ---
 
+<a id="overview"></a>
+
 ## 🧠 Overview
 
 This platform enables developers to **self-service infrastructure and deployments** without needing deep IaC knowledge, while enforcing **Regulatory compliance by design**.
@@ -28,7 +30,7 @@ Note this standard assumes that you will use AI coding agents such as Claude Cod
 | Standard | What It Covers |
 |----------|---------------|
 | [CI/CD and DevSecOps](#overview) | Coding, delivery and quality gates |
-| [Supply chain security](./standards/detailed/supply-chain-security.md) | Scanning, signing, provenance, admission |
+| [Supply chain security](./supply-chain-security.md) | Scanning, signing, provenance, admission |
 
 
 ---
