@@ -66,12 +66,11 @@ Prefer the command line? Replace `open` with `less`, `bat`, or your editor of ch
 | [API design](./standards/detailed/api-design.md) | 📋 Beta | Contracts and interfaces | [View](./standards/detailed/api-design.md) |
 | [Data architecture](./standards/detailed/data/README.md) | 📋 Beta | AWS, Azure, and GCP | [View](./standards/detailed/data/README.md) |
 | [Cloud network topology](./standards/detailed/networking/cloud-network-topology.md) | ✅ Stable | Hub-and-spoke, PCI, gateways | [View](./standards/detailed/networking/cloud-network-topology.md) |
-| [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 🚧 Beta  | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
-| [CI/CD and DevSecOps](./standards/detailed/cicd/cicd-pipeline.md) | 🚧 Beta  | Delivery and quality gates | [View](./standards/detailed/cicd/cicd-pipeline.md) |
+| [Integration patterns](./standards/detailed/integration/data-integration-patterns.md) | 📋 Beta | Events and data movement | [View](./standards/detailed/integration/data-integration-patterns.md) |
+| [CI/CD and DevSecOps](./standards/detailed/cicd/cicd-pipeline.md) | 🚧 Beta | Delivery and quality gates | [View](./standards/detailed/cicd/cicd-pipeline.md) |
 | [Observability](./standards/detailed/observability/README.md) | 🚧 Beta | Logs, metrics, traces, alerting, SLIs/SLOs | [View](./standards/detailed/observability/README.md) |
-| [Developer tools](./tools/tools.md) | 🚧 Beta  | Workstation setup and hooks | [View](./tools/tools.md) |
+| [Developer tools](./tools/tools.md) | 🚧 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
 | [Release engineering](./standards/detailed/release-engineering/README.md) | 🚧 Beta | Progressive delivery, promotion | [View](./standards/detailed/release-engineering/README.md) |
-| [Developer tools](./tools/tools.md) | 📋 Beta | Workstation setup and hooks | [View](./tools/tools.md) |
 | [Agent catalog](./agents/README.md) | 🚧 Beta | Reusable engineering agents | [View](./agents/README.md) |
 | [Claude templates](./templates/) | 🚧 Beta | AI-assisted delivery | [View](./templates/README.md) |
 
@@ -131,8 +130,12 @@ To publish a release after changes land on `main`, create and push a SemVer tag:
 ```bash
 git checkout main
 git pull --ff-only
-git tag v0.2.0
-git push origin v0.2.0
+git fetch --tags
+# Fetch the latest tag, then tag the next patch version
+latest_tag=$(git describe --tags --abbrev=0)
+next_version=$(echo "$latest_tag" | awk -F. '{print $1"."$2"."($3+1)}')
+git tag "$next_version"
+git push origin "$next_version"
 ```
 
 Pushing a `v*` tag starts the **Release** workflow. The workflow accepts only `vMAJOR.MINOR.PATCH` tags, creates the GitHub release, and generates release notes from merged pull requests. There is no manual release step in GitHub Actions. Keep notable changes grouped in the release description and ensure the quality gate passes before tagging.
