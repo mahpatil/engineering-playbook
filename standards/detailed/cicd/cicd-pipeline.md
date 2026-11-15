@@ -273,9 +273,16 @@ flowchart TD
 
 ---
 
+## Documents
+
+| Standard | What It Covers |
+|----------|---------------|
+| [CI/CD and DevSecOps](#overview) | Coding, delivery and quality gates |
+| [Supply chain security](./supply-chain-security.md) | Scanning, signing, provenance, admission |
+
 ## Related Standards
 
-* [Supply chain security](./standards/detailed/supply-chain-security.md) - Scanning, signing, provenance, admission
+* [Supply chain security](./supply-chain-security.md) - Scanning, signing, provenance, admission
 
 ## 🏁 Final Summary
 
