@@ -4,11 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       bump:
-        description: "Version bump type"
+        description: "Version bump type (auto decides patch vs minor by change count)"
         required: true
-        default: patch
+        default: auto
         type: choice
         options:
+          - auto
           - patch
           - minor
           - major
@@ -31,10 +32,21 @@ jobs:
         run: |
           git fetch --tags
           latest_tag=$(git describe --tags --abbrev=0)
-          # strip leading v
           core=${latest_tag#v}
           IFS='.' read -r major minor patch <<< "$core"
-          case "${{ github.event.inputs.bump }}" in
+
+          bump="${{ github.event.inputs.bump }}"
+          if [ "$bump" = "auto" ]; then
+            # Count commits since the last tag to decide patch vs minor
+            changes=$(git rev-list "${latest_tag}..HEAD" --count)
+            if [ "$changes" -ge 10 ]; then
+              bump="minor"
+            else
+              bump="patch"
+            fi
+          fi
+
+          case "$bump" in
             major) major=$((major + 1)); minor=0; patch=0 ;;
             minor) minor=$((minor + 1)); patch=0 ;;
             patch) patch=$((patch + 1)) ;;
@@ -42,6 +54,7 @@ jobs:
           next_version="v${major}.${minor}.${patch}"
           echo "latest=$latest_tag" >> "$GITHUB_OUTPUT"
           echo "next=$next_version" >> "$GITHUB_OUTPUT"
+          echo "bump=$bump" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
         run: |
