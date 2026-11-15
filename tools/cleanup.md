@@ -1,6 +1,9 @@
 # Overview
 If you are using a mac and install a lot of tools for coding and development, you can run into occassional space constraints 
 due to downloading tools and models. If that is the case this is the right page for you.
+# Start with
+Settings > General > Storage > Applications, Bin
+> Clear all apps you dont use.
 
 # Best cleanup tool
 https://github.com/tw93/mole
