@@ -1,14 +1,20 @@
-# Overview
-If you are using a mac and install a lot of tools for coding and development, you can run into occassional space constraints 
-due to downloading tools and models. If that is the case this is the right page for you.
-# Start with
-Settings > General > Storage > Applications, Bin
-> Clear all apps you dont use.
+# Cleanup: Reclaiming Disk Space on macOS
 
-# Best cleanup tool
-https://github.com/tw93/mole
+> A guide for managing disk space on macOS when you install many coding and development tools.
 
-# Docker
+## Overview
+
+If you use a Mac and install a lot of tools for coding and development, you can run into occasional space constraints due to downloading tools and models. If that is the case, this page is for you.
+
+## Start with
+
+Settings > General > Storage > Applications, Bin — clear all apps you don't use.
+
+## Best cleanup tool
+
+[Mole](https://github.com/tw93/mole)
+
+## Docker
 
 ```sh
 # See what's using space
@@ -25,12 +31,13 @@ docker volume ls -f dangling=true
 docker volume prune -a
 ```
 
-# LM Studio models
-```
-Delete folders directly from ~/.lmstudio/models/ (older installs use ~/.cache/lm-studio/models/).
-```
-# Hugging face
-```
+## LM Studio models
+
+Delete folders directly from `~/.lmstudio/models/` (older installs use `~/.cache/lm-studio/models/`).
+
+## Hugging Face
+
+```sh
 # See which models and datasets are taking up space
 huggingface-cli scan-cache
 
