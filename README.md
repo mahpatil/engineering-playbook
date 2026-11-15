@@ -130,8 +130,12 @@ To publish a release after changes land on `main`, create and push a SemVer tag:
 ```bash
 git checkout main
 git pull --ff-only
-git tag v0.2.0
-git push origin v0.2.0
+git fetch --tags
+# Fetch the latest tag, then tag the next patch version
+latest_tag=$(git describe --tags --abbrev=0)
+next_version=$(echo "$latest_tag" | awk -F. '{print $1"."$2"."($3+1)}')
+git tag "$next_version"
+git push origin "$next_version"
 ```
 
 Pushing a `v*` tag starts the **Release** workflow. The workflow accepts only `vMAJOR.MINOR.PATCH` tags, creates the GitHub release, and generates release notes from merged pull requests. There is no manual release step in GitHub Actions. Keep notable changes grouped in the release description and ensure the quality gate passes before tagging.
